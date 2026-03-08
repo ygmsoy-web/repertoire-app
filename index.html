@@ -12,658 +12,171 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #F5F0E8;
-    --cream-dark: #EDE6D6;
-    --terracotta: #C1440E;
-    --terracotta-light: #E8856A;
-    --terracotta-pale: #F5DDD5;
-    --ink: #1A1410;
-    --ink-mid: #4A3F35;
-    --ink-light: #8A7A6E;
-    --ink-faint: #C4B8AE;
-    --chord: #1A5276;
-    --success: #2E7D4F;
-    --white: #FEFCF8;
-    --shadow: rgba(26,20,16,0.08);
-    --shadow-deep: rgba(26,20,16,0.16);
+    --cream: #F5F0E8; --cream-dark: #EDE6D6; --terracotta: #C1440E;
+    --terracotta-pale: #F5DDD5; --ink: #1A1410; --ink-mid: #4A3F35;
+    --ink-light: #8A7A6E; --ink-faint: #C4B8AE; --chord: #1A5276; --white: #FEFCF8;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--ink);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ── SCREENS ── */
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
   .screen { display: none; min-height: 100vh; flex-direction: column; }
   .screen.active { display: flex; }
 
-  /* ── TOP BAR ── */
-  .topbar {
-    background: var(--cream);
-    border-bottom: 1.5px solid var(--ink-faint);
-    padding: 0 16px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(8px);
-  }
-
-  .topbar-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.3px;
-  }
-
-  .topbar-subtitle {
-    font-size: 11px;
-    color: var(--ink-light);
-    font-weight: 300;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-
+  /* TOPBAR */
+  .topbar { background: var(--cream); border-bottom: 1.5px solid var(--ink-faint); padding: 0 16px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .topbar-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; }
+  .topbar-subtitle { font-size: 11px; color: var(--ink-light); font-weight: 300; letter-spacing: 0.5px; text-transform: uppercase; }
   .topbar-left { display: flex; flex-direction: column; gap: 1px; }
-
-  .icon-btn {
-    width: 38px; height: 38px;
-    border: none; background: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
-    color: var(--ink-mid);
-    transition: background 0.15s;
-    -webkit-appearance: none;
-  }
+  .icon-btn { width: 38px; height: 38px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--ink-mid); -webkit-appearance: none; }
   .icon-btn:active { background: var(--cream-dark); }
   .icon-btn svg { width: 22px; height: 22px; }
 
-  /* ── BOTTOM NAV ── */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 64px;
-    background: var(--white);
-    border-top: 1.5px solid var(--ink-faint);
-    display: flex;
-    z-index: 200;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .nav-btn {
-    flex: 1;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 3px;
-    border: none; background: none; cursor: pointer;
-    color: var(--ink-light);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    transition: color 0.15s;
-    -webkit-appearance: none;
-  }
+  /* BOTTOM NAV */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: var(--white); border-top: 1.5px solid var(--ink-faint); display: flex; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: none; background: none; cursor: pointer; color: var(--ink-light); font-size: 10px; font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; -webkit-appearance: none; }
   .nav-btn.active { color: var(--terracotta); }
   .nav-btn svg { width: 22px; height: 22px; }
-  .nav-btn span { font-family: 'DM Sans', sans-serif; }
 
-  /* ── SEARCH BAR ── */
-  .search-wrap {
-    padding: 12px 16px 8px;
-    background: var(--cream);
-  }
-
-  .search-input-wrap {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--white);
-    border: 1.5px solid var(--ink-faint);
-    border-radius: 12px;
-    padding: 0 14px;
-    height: 44px;
-    transition: border-color 0.15s;
-  }
+  /* SEARCH */
+  .search-wrap { padding: 12px 16px 8px; }
+  .search-input-wrap { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1.5px solid var(--ink-faint); border-radius: 12px; padding: 0 14px; height: 44px; }
   .search-input-wrap:focus-within { border-color: var(--terracotta); }
-  .search-input-wrap svg { color: var(--ink-light); flex-shrink: 0; width: 18px; height: 18px; }
-
-  #searchInput {
-    flex: 1; border: none; background: none; outline: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; color: var(--ink);
-  }
+  .search-input-wrap svg { color: var(--ink-light); width: 18px; height: 18px; flex-shrink: 0; }
+  #searchInput { flex: 1; border: none; background: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--ink); }
   #searchInput::placeholder { color: var(--ink-faint); }
 
-  /* ── SONG LIST ── */
-  .list-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 0 80px;
-  }
-
-  .alpha-section { }
-
-  .alpha-header {
-    padding: 10px 16px 4px;
-    font-family: 'Playfair Display', serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--terracotta);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--cream-dark);
-    background: var(--cream);
-    position: sticky;
-    top: 0;
-  }
-
-  .song-item {
-    display: flex; align-items: center;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--cream-dark);
-    cursor: pointer;
-    background: var(--cream);
-    transition: background 0.12s;
-    gap: 12px;
-    -webkit-appearance: none;
-    border-left: none; border-right: none; border-top: none;
-    width: 100%; text-align: left;
-  }
+  /* SONG LIST */
+  .list-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+  .alpha-header { padding: 10px 16px 4px; font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 600; color: var(--terracotta); letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--cream-dark); background: var(--cream); position: sticky; top: 0; }
+  .song-item { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--cream-dark); background: var(--cream); gap: 12px; border-left: none; border-right: none; border-top: none; width: 100%; text-align: left; cursor: pointer; -webkit-appearance: none; }
   .song-item:active { background: var(--terracotta-pale); }
-
-  .song-icon {
-    width: 38px; height: 38px; border-radius: 10px;
-    background: var(--cream-dark);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--ink-mid);
-  }
-  .song-icon.has-chords {
-    background: var(--terracotta-pale);
-    color: var(--terracotta);
-  }
-
+  .song-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink-mid); }
+  .song-icon.has-chords { background: var(--terracotta-pale); color: var(--terracotta); }
   .song-info { flex: 1; min-width: 0; }
-
-  .song-name {
-    font-family: 'Lora', serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--ink);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3;
-  }
-
-  .song-artist {
-    font-size: 12px;
-    color: var(--ink-light);
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
+  .song-name { font-family: 'Lora', serif; font-size: 15px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .song-artist { font-size: 12px; color: var(--ink-light); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .song-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
-
-  .badge {
-    font-size: 10px; font-weight: 500;
-    padding: 2px 7px; border-radius: 20px;
-    letter-spacing: 0.2px;
-  }
+  .badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 20px; }
   .badge-chord { background: #D6EAF8; color: var(--chord); }
   .badge-playlist { background: var(--terracotta-pale); color: var(--terracotta); }
-
   .song-arrow { color: var(--ink-faint); flex-shrink: 0; }
   .song-arrow svg { width: 16px; height: 16px; }
 
-  /* ── SONG DETAIL ── */
-  #songDetailScreen {
-    background: var(--white);
-  }
-
-  .song-detail-topbar {
-    background: var(--white);
-    border-bottom: 1.5px solid var(--cream-dark);
-    padding: 0 16px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .song-detail-header {
-    padding: 24px 20px 16px;
-    border-bottom: 1.5px solid var(--cream-dark);
-    background: var(--white);
-  }
-
-  .detail-song-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-
-  .detail-artist {
-    font-size: 14px;
-    color: var(--terracotta);
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .detail-meta {
-    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .detail-actions {
-    display: flex; gap: 8px; margin-top: 14px;
-  }
-
-  .action-btn {
-    display: flex; align-items: center; gap: 6px;
-    padding: 8px 14px; border-radius: 8px;
-    border: 1.5px solid var(--ink-faint);
-    background: var(--cream);
-    font-size: 13px; font-weight: 500;
-    color: var(--ink-mid); cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.15s;
-    -webkit-appearance: none;
-  }
+  /* SONG DETAIL */
+  #songDetailScreen { background: var(--white); }
+  .song-detail-topbar { background: var(--white); border-bottom: 1.5px solid var(--cream-dark); padding: 0 16px; height: 56px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
+  .song-detail-header { padding: 24px 20px 16px; border-bottom: 1.5px solid var(--cream-dark); }
+  .detail-song-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 6px; }
+  .detail-artist { font-size: 14px; color: var(--terracotta); font-weight: 500; }
+  .detail-meta { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .detail-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .action-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--ink-faint); background: var(--cream); font-size: 13px; font-weight: 500; color: var(--ink-mid); cursor: pointer; font-family: 'DM Sans', sans-serif; -webkit-appearance: none; }
   .action-btn:active { background: var(--cream-dark); }
   .action-btn svg { width: 16px; height: 16px; }
-  .action-btn.primary {
-    background: var(--terracotta);
-    border-color: var(--terracotta);
-    color: white;
-  }
+  .lyrics-container { padding: 20px; padding-bottom: 100px; }
+  .chord-line { font-family: 'DM Sans', monospace; font-size: 13px; font-weight: 600; color: var(--chord); line-height: 1.4; letter-spacing: 0.5px; white-space: pre-wrap; }
 
-  .lyrics-container {
-    padding: 20px;
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 100px;
-  }
+  /* RICH TEXT EDITOR */
+  #editorScreen { background: var(--white); }
+  .editor-topbar { background: var(--white); border-bottom: 1.5px solid var(--cream-dark); padding: 0 12px; height: 56px; display: flex; align-items: center; gap: 8px; position: sticky; top: 0; z-index: 100; }
+  .editor-title-input { flex: 1; border: none; background: none; outline: none; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--ink); }
+  .save-btn { padding: 7px 16px; background: var(--terracotta); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; -webkit-appearance: none; white-space: nowrap; }
+  .editor-artist-input { width: 100%; padding: 8px 16px; border: none; border-bottom: 1px solid var(--cream-dark); background: var(--cream); outline: none; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink-mid); }
+  .editor-artist-input::placeholder { color: var(--ink-faint); }
 
-  .lyrics-text {
-    font-family: 'Lora', serif;
-    font-size: 16px;
-    line-height: 1.85;
-    color: var(--ink);
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+  /* FORMAT TOOLBAR */
+  .format-toolbar { display: flex; align-items: center; gap: 2px; padding: 6px 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; border-bottom: 1.5px solid var(--cream-dark); background: var(--cream); flex-shrink: 0; scrollbar-width: none; }
+  .format-toolbar::-webkit-scrollbar { display: none; }
+  .fmt-btn { min-width: 34px; height: 34px; border: 1px solid transparent; border-radius: 7px; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--ink-mid); font-family: 'DM Sans', sans-serif; flex-shrink: 0; padding: 0 8px; -webkit-appearance: none; }
+  .fmt-btn:active { background: var(--cream-dark); border-color: var(--ink-faint); }
+  .fmt-sep { width: 1px; height: 24px; background: var(--ink-faint); margin: 0 4px; flex-shrink: 0; }
+  .fmt-select { height: 32px; border: 1px solid var(--ink-faint); border-radius: 7px; background: var(--white); font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink-mid); padding: 0 6px; cursor: pointer; outline: none; flex-shrink: 0; }
 
-  .chord-line {
-    font-family: 'DM Sans', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--chord);
-    line-height: 1.4;
-    letter-spacing: 0.5px;
-    white-space: pre-wrap;
-  }
+  /* Color palette */
+  .color-palette { position: fixed; z-index: 500; background: var(--white); border: 1.5px solid var(--ink-faint); border-radius: 12px; padding: 10px; display: none; flex-wrap: wrap; gap: 8px; width: 204px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  .color-palette.open { display: flex; }
+  .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 0 0 1px rgba(0,0,0,0.1); }
+  .color-swatch:active { transform: scale(1.2); }
 
-  .lyrics-block { margin-bottom: 20px; }
+  .editor-content { flex: 1; overflow-y: auto; padding: 16px 20px 120px; }
+  #richEditor { min-height: 300px; outline: none; font-family: 'Lora', serif; font-size: 16px; line-height: 1.85; color: var(--ink); word-break: break-word; }
+  #richEditor:empty:before { content: 'Şarkı sözlerini buraya yaz…'; color: var(--ink-faint); pointer-events: none; }
 
-  /* ── PLAYLISTS SCREEN ── */
-  .content-pad {
-    padding: 16px;
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 80px;
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 14px;
-  }
-
-  .playlist-card {
-    background: var(--white);
-    border: 1.5px solid var(--cream-dark);
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    display: flex; align-items: center; gap: 14px;
-    transition: box-shadow 0.15s;
-    -webkit-appearance: none;
-    width: 100%; text-align: left;
-    border-left: 4px solid var(--terracotta);
-  }
-  .playlist-card:active { box-shadow: 0 2px 12px var(--shadow-deep); }
-
-  .playlist-icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    background: var(--terracotta-pale);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--terracotta);
-    flex-shrink: 0;
-  }
+  /* PLAYLISTS */
+  .content-pad { padding: 16px; flex: 1; overflow-y: auto; padding-bottom: 80px; }
+  .playlist-card { background: var(--white); border: 1.5px solid var(--cream-dark); border-radius: 14px; padding: 16px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 14px; -webkit-appearance: none; width: 100%; text-align: left; border-left: 4px solid var(--terracotta); }
+  .playlist-card:active { opacity: 0.8; }
+  .playlist-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--terracotta-pale); display: flex; align-items: center; justify-content: center; color: var(--terracotta); flex-shrink: 0; }
   .playlist-icon svg { width: 22px; height: 22px; }
-
   .playlist-info { flex: 1; min-width: 0; }
-
-  .playlist-name {
-    font-family: 'Lora', serif;
-    font-size: 15px; font-weight: 500;
-    color: var(--ink);
-  }
-
-  .playlist-count {
-    font-size: 12px; color: var(--ink-light); margin-top: 2px;
-  }
-
-  .playlist-arrow { color: var(--ink-faint); }
-  .playlist-arrow svg { width: 16px; height: 16px; }
-
-  .fab {
-    position: fixed;
-    bottom: 80px; right: 20px;
-    width: 52px; height: 52px;
-    background: var(--terracotta);
-    border: none; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(193,68,14,0.35);
-    transition: transform 0.15s, box-shadow 0.15s;
-    z-index: 150;
-    -webkit-appearance: none;
-  }
-  .fab:active { transform: scale(0.94); box-shadow: 0 2px 8px rgba(193,68,14,0.25); }
+  .playlist-name { font-family: 'Lora', serif; font-size: 15px; font-weight: 500; color: var(--ink); }
+  .playlist-count { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
+  .fab { position: fixed; bottom: 80px; right: 20px; width: 52px; height: 52px; background: var(--terracotta); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 16px rgba(193,68,14,0.35); z-index: 150; -webkit-appearance: none; }
+  .fab:active { transform: scale(0.94); }
   .fab svg { width: 24px; height: 24px; color: white; }
 
-  /* ── PLAYLIST DETAIL ── */
-  .playlist-song-item {
-    display: flex; align-items: center;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--cream-dark);
-    gap: 12px;
-    background: var(--white);
-  }
-
-  .ps-num {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--cream-dark);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600;
-    color: var(--ink-mid); flex-shrink: 0;
-  }
-
+  /* PLAYLIST DETAIL */
+  .playlist-song-item { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--cream-dark); gap: 12px; background: var(--white); }
+  .ps-num { width: 28px; height: 28px; border-radius: 50%; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--ink-mid); flex-shrink: 0; }
   .ps-info { flex: 1; min-width: 0; cursor: pointer; }
-
-  .ps-name {
-    font-family: 'Lora', serif;
-    font-size: 14px; font-weight: 500; color: var(--ink);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-
+  .ps-name { font-family: 'Lora', serif; font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ps-artist { font-size: 11px; color: var(--ink-light); margin-top: 1px; }
-
-  .ps-remove {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: none; background: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ink-faint);
-    -webkit-appearance: none;
-    transition: color 0.15s;
-  }
+  .ps-remove { width: 32px; height: 32px; border-radius: 50%; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-faint); -webkit-appearance: none; }
   .ps-remove:active { color: var(--terracotta); }
   .ps-remove svg { width: 18px; height: 18px; }
 
-  /* ── IMPORT SCREEN ── */
-  .import-section {
-    background: var(--white);
-    border: 1.5px solid var(--cream-dark);
-    border-radius: 14px;
-    overflow: hidden;
-    margin-bottom: 14px;
-  }
-
-  .import-section-header {
-    padding: 14px 16px;
-    font-family: 'Playfair Display', serif;
-    font-size: 15px; font-weight: 700;
-    color: var(--ink);
-    border-bottom: 1px solid var(--cream-dark);
-    background: var(--cream);
-  }
-
+  /* IMPORT */
+  .import-section { background: var(--white); border: 1.5px solid var(--cream-dark); border-radius: 14px; overflow: hidden; margin-bottom: 14px; }
+  .import-section-header { padding: 14px 16px; font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--ink); border-bottom: 1px solid var(--cream-dark); background: var(--cream); }
   .import-section-body { padding: 16px; }
-
-  .upload-zone {
-    border: 2px dashed var(--ink-faint);
-    border-radius: 10px;
-    padding: 24px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .upload-zone:hover { border-color: var(--terracotta); background: var(--terracotta-pale); }
+  .upload-zone { border: 2px dashed var(--ink-faint); border-radius: 10px; padding: 24px 16px; text-align: center; cursor: pointer; }
+  .upload-zone:active { border-color: var(--terracotta); background: var(--terracotta-pale); }
   .upload-zone svg { width: 32px; height: 32px; color: var(--ink-light); margin-bottom: 8px; }
   .upload-zone-text { font-size: 14px; color: var(--ink-mid); font-weight: 500; }
   .upload-zone-sub { font-size: 12px; color: var(--ink-light); margin-top: 4px; }
-
   .file-input { display: none; }
-
-  .import-btn {
-    width: 100%;
-    padding: 13px;
-    background: var(--terracotta);
-    color: white;
-    border: none; border-radius: 10px;
-    font-size: 15px; font-weight: 500;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    margin-top: 12px;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: opacity 0.15s;
-    -webkit-appearance: none;
-  }
-  .import-btn:active { opacity: 0.85; }
-  .import-btn:disabled { opacity: 0.5; cursor: default; }
+  .import-btn { width: 100%; padding: 13px; background: var(--terracotta); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; -webkit-appearance: none; }
   .import-btn svg { width: 18px; height: 18px; }
-
-  .progress-wrap {
-    margin-top: 12px; display: none;
-  }
-  .progress-bar {
-    height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%; background: var(--terracotta); border-radius: 3px;
-    transition: width 0.3s;
-    width: 0%;
-  }
+  .progress-wrap { margin-top: 12px; display: none; }
+  .progress-bar { height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--terracotta); border-radius: 3px; transition: width 0.3s; width: 0%; }
   .progress-text { font-size: 12px; color: var(--ink-light); margin-top: 6px; text-align: center; }
-
+  .form-input { padding: 11px 14px; border: 1.5px solid var(--ink-faint); border-radius: 10px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--cream); outline: none; width: 100%; -webkit-appearance: none; }
+  .form-input:focus { border-color: var(--terracotta); }
+  .form-label { font-size: 12px; font-weight: 500; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
   .manual-add-form { display: flex; flex-direction: column; gap: 10px; }
 
-  .form-input {
-    padding: 11px 14px;
-    border: 1.5px solid var(--ink-faint);
-    border-radius: 10px;
-    font-size: 15px; font-family: 'DM Sans', sans-serif;
-    color: var(--ink); background: var(--cream);
-    outline: none; transition: border-color 0.15s;
-    -webkit-appearance: none;
-  }
-  .form-input:focus { border-color: var(--terracotta); }
-
-  textarea.form-input {
-    min-height: 140px; resize: vertical;
-    font-family: 'Lora', serif; font-size: 14px; line-height: 1.7;
-  }
-
-  .form-label {
-    font-size: 12px; font-weight: 500; color: var(--ink-light);
-    text-transform: uppercase; letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-
-  /* ── MODAL ── */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(26,20,16,0.5);
-    z-index: 1000;
-    display: none; align-items: flex-end;
-    backdrop-filter: blur(2px);
-  }
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(26,20,16,0.5); z-index: 1000; display: none; align-items: flex-end; backdrop-filter: blur(2px); }
   .modal-overlay.open { display: flex; }
-
-  .modal-sheet {
-    background: var(--white);
-    border-radius: 20px 20px 0 0;
-    width: 100%; max-height: 80vh;
-    padding: 0 0 env(safe-area-inset-bottom);
-    animation: slideUp 0.25s ease;
-    display: flex; flex-direction: column;
-  }
-
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  .modal-handle {
-    width: 36px; height: 4px; background: var(--ink-faint);
-    border-radius: 2px; margin: 12px auto 8px;
-  }
-
-  .modal-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px; font-weight: 700;
-    padding: 8px 20px 16px;
-    color: var(--ink);
-    border-bottom: 1px solid var(--cream-dark);
-  }
-
-  .modal-content {
-    padding: 16px 20px;
-    overflow-y: auto; flex: 1;
-  }
-
-  .modal-input {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1.5px solid var(--ink-faint);
-    border-radius: 10px;
-    font-size: 15px; font-family: 'DM Sans', sans-serif;
-    color: var(--ink); background: var(--cream);
-    outline: none; margin-bottom: 12px;
-    -webkit-appearance: none;
-  }
-  .modal-input:focus { border-color: var(--terracotta); }
-
-  .modal-playlist-item {
-    display: flex; align-items: center;
-    padding: 12px 0; border-bottom: 1px solid var(--cream-dark);
-    gap: 12px; cursor: pointer;
-  }
-
+  .modal-sheet { background: var(--white); border-radius: 20px 20px 0 0; width: 100%; max-height: 80vh; animation: slideUp 0.25s ease; display: flex; flex-direction: column; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 36px; height: 4px; background: var(--ink-faint); border-radius: 2px; margin: 12px auto 8px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; padding: 8px 20px 16px; color: var(--ink); border-bottom: 1px solid var(--cream-dark); }
+  .modal-content { padding: 16px 20px; overflow-y: auto; flex: 1; }
+  .modal-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--ink-faint); border-radius: 10px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--cream); outline: none; margin-bottom: 12px; -webkit-appearance: none; }
+  .modal-playlist-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--cream-dark); gap: 12px; cursor: pointer; }
   .modal-playlist-item:last-child { border-bottom: none; }
-
-  .check-circle {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 2px solid var(--ink-faint);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: all 0.15s;
-  }
-  .check-circle.checked {
-    background: var(--terracotta); border-color: var(--terracotta);
-  }
-  .check-circle.checked::after {
-    content: '';
-    width: 6px; height: 10px;
-    border-right: 2px solid white; border-bottom: 2px solid white;
-    transform: rotate(45deg) translate(-1px,-1px);
-    display: block;
-  }
-
+  .check-circle { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--ink-faint); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .check-circle.checked { background: var(--terracotta); border-color: var(--terracotta); }
+  .check-circle.checked::after { content: ''; width: 6px; height: 10px; border-right: 2px solid white; border-bottom: 2px solid white; transform: rotate(45deg) translate(-1px,-1px); display: block; }
   .modal-pl-name { font-family: 'Lora', serif; font-size: 15px; color: var(--ink); }
   .modal-pl-count { font-size: 12px; color: var(--ink-light); margin-top: 1px; }
+  .modal-actions { padding: 12px 20px 16px; border-top: 1px solid var(--cream-dark); display: flex; gap: 10px; }
+  .modal-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--ink-faint); background: var(--cream); color: var(--ink-mid); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; -webkit-appearance: none; }
+  .modal-btn.primary { background: var(--terracotta); border-color: var(--terracotta); color: white; }
 
-  .modal-actions {
-    padding: 12px 20px 16px;
-    border-top: 1px solid var(--cream-dark);
-    display: flex; gap: 10px;
-  }
-
-  .modal-btn {
-    flex: 1; padding: 12px;
-    border-radius: 10px; border: 1.5px solid var(--ink-faint);
-    background: var(--cream); color: var(--ink-mid);
-    font-size: 15px; font-weight: 500;
-    cursor: pointer; font-family: 'DM Sans', sans-serif;
-    -webkit-appearance: none;
-  }
-  .modal-btn.primary {
-    background: var(--terracotta); border-color: var(--terracotta); color: white;
-  }
-
-  /* ── EMPTY STATES ── */
-  .empty-state {
-    display: flex; flex-direction: column; align-items: center;
-    padding: 60px 32px; text-align: center;
-    color: var(--ink-light);
-  }
+  /* EMPTY + TOAST */
+  .empty-state { display: flex; flex-direction: column; align-items: center; padding: 60px 32px; text-align: center; color: var(--ink-light); }
   .empty-state svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.4; }
   .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink-mid); margin-bottom: 8px; }
   .empty-state p { font-size: 14px; line-height: 1.6; }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--ink); color: var(--cream);
-    padding: 10px 20px; border-radius: 20px;
-    font-size: 14px; font-weight: 500;
-    opacity: 0; transition: all 0.25s;
-    z-index: 2000; white-space: nowrap;
-    pointer-events: none;
-  }
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--cream); padding: 10px 20px; border-radius: 20px; font-size: 14px; opacity: 0; transition: all 0.25s; z-index: 2000; white-space: nowrap; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* ── MISC ── */
-  .divider { height: 1px; background: var(--cream-dark); margin: 8px 0; }
-
-  .count-chip {
-    background: var(--cream-dark);
-    color: var(--ink-mid);
-    font-size: 11px; font-weight: 600;
-    padding: 2px 8px; border-radius: 20px;
-    font-family: 'DM Sans', sans-serif;
-  }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════
-     SCREEN 1: SONGS LIST
-════════════════════════════════════ -->
+<!-- SONGS LIST -->
 <div id="songsScreen" class="screen active">
   <div class="topbar">
     <div class="topbar-left">
@@ -674,39 +187,31 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </button>
   </div>
-
   <div class="search-wrap">
     <div class="search-input-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="search" id="searchInput" placeholder="Şarkı veya sanatçı ara…" oninput="renderSongList()">
     </div>
   </div>
-
   <div class="list-content" id="songListContainer">
     <div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      <h3>Henüz şarkı yok</h3>
-      <p>PDF, Word veya fotoğraf yükleyerek<br>şarkılarını ekle</p>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      <h3>Henüz şarkı yok</h3><p>PDF, Word veya fotoğraf yükleyerek şarkılarını ekle</p>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     SCREEN 2: SONG DETAIL
-════════════════════════════════════ -->
+<!-- SONG DETAIL -->
 <div id="songDetailScreen" class="screen">
   <div class="song-detail-topbar">
     <button class="icon-btn" onclick="goBack()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <div style="flex:1">
-      <div style="font-size:12px;color:var(--ink-light);text-transform:uppercase;letter-spacing:0.5px;font-weight:500;">Şarkı</div>
-    </div>
-    <button class="icon-btn" id="detailMoreBtn" onclick="openSongOptions()">
+    <div style="flex:1"></div>
+    <button class="icon-btn" onclick="openSongOptions()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
     </button>
   </div>
-
   <div style="overflow-y:auto;flex:1;padding-bottom:20px">
     <div class="song-detail-header">
       <div class="detail-song-title" id="detailSongTitle"></div>
@@ -717,17 +222,76 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Playlist'e ekle
         </button>
+        <button class="action-btn" onclick="openEditor()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Düzenle
+        </button>
       </div>
     </div>
-    <div class="lyrics-container">
-      <div id="detailLyrics" class="lyrics-text"></div>
-    </div>
+    <div class="lyrics-container"><div id="detailLyrics"></div></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     SCREEN 3: PLAYLISTS
-════════════════════════════════════ -->
+<!-- RICH TEXT EDITOR -->
+<div id="editorScreen" class="screen">
+  <div class="editor-topbar">
+    <button class="icon-btn" onclick="closeEditor()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <input type="text" class="editor-title-input" id="editorTitle" placeholder="Şarkı adı…">
+    <button class="save-btn" onclick="saveFromEditor()">Kaydet</button>
+  </div>
+  <input type="text" class="editor-artist-input" id="editorArtist" placeholder="Sanatçı adı…">
+  <div class="format-toolbar">
+    <button class="fmt-btn" onclick="fmt('bold')"><b>B</b></button>
+    <button class="fmt-btn" onclick="fmt('italic')"><i style="font-family:serif">I</i></button>
+    <button class="fmt-btn" onclick="fmt('underline')"><u>U</u></button>
+    <div class="fmt-sep"></div>
+    <select class="fmt-select" onchange="fmtSize(this.value)">
+      <option value="">Boyut</option>
+      <option value="12px">Küçük</option>
+      <option value="16px">Normal</option>
+      <option value="20px">Büyük</option>
+      <option value="24px">Çok büyük</option>
+    </select>
+    <div class="fmt-sep"></div>
+    <button class="fmt-btn" onclick="togglePalette('text')" style="gap:3px;font-size:12px">
+      🖊 <div id="textColorDot" style="width:10px;height:10px;border-radius:50%;background:#1A1410;border:1px solid #ccc;flex-shrink:0"></div>
+    </button>
+    <button class="fmt-btn" onclick="togglePalette('hi')" style="gap:3px;font-size:12px">
+      🖍 <div id="hlColorDot" style="width:10px;height:10px;border-radius:50%;background:#FFE066;border:1px solid #ccc;flex-shrink:0"></div>
+    </button>
+    <div class="fmt-sep"></div>
+    <button class="fmt-btn" onclick="applyChordStyle()" style="color:var(--chord);font-size:12px;font-weight:800">Am</button>
+    <div class="fmt-sep"></div>
+    <button class="fmt-btn" onclick="fmt('removeFormat')" style="font-size:11px;color:var(--ink-light)">✕ Temizle</button>
+  </div>
+  <!-- Color palettes -->
+  <div class="color-palette" id="textPal">
+    <div class="color-swatch" style="background:#1A1410" onclick="applyCol('#1A1410','text')"></div>
+    <div class="color-swatch" style="background:#C1440E" onclick="applyCol('#C1440E','text')"></div>
+    <div class="color-swatch" style="background:#1A5276" onclick="applyCol('#1A5276','text')"></div>
+    <div class="color-swatch" style="background:#2E7D4F" onclick="applyCol('#2E7D4F','text')"></div>
+    <div class="color-swatch" style="background:#7D3C98" onclick="applyCol('#7D3C98','text')"></div>
+    <div class="color-swatch" style="background:#8A7A6E" onclick="applyCol('#8A7A6E','text')"></div>
+    <div class="color-swatch" style="background:#C0392B" onclick="applyCol('#C0392B','text')"></div>
+    <div class="color-swatch" style="background:#117A65" onclick="applyCol('#117A65','text')"></div>
+  </div>
+  <div class="color-palette" id="hiPal">
+    <div class="color-swatch" style="background:#FFE066" onclick="applyCol('#FFE066','hi')"></div>
+    <div class="color-swatch" style="background:#ABEBC6" onclick="applyCol('#ABEBC6','hi')"></div>
+    <div class="color-swatch" style="background:#AED6F1" onclick="applyCol('#AED6F1','hi')"></div>
+    <div class="color-swatch" style="background:#F9E4B7" onclick="applyCol('#F9E4B7','hi')"></div>
+    <div class="color-swatch" style="background:#FADBD8" onclick="applyCol('#FADBD8','hi')"></div>
+    <div class="color-swatch" style="background:#E8DAEF" onclick="applyCol('#E8DAEF','hi')"></div>
+    <div class="color-swatch" style="background:transparent;border:2px dashed #ccc" onclick="applyCol('transparent','hi')"></div>
+  </div>
+  <div class="editor-content">
+    <div id="richEditor" contenteditable="true" spellcheck="false"></div>
+  </div>
+</div>
+
+<!-- PLAYLISTS -->
 <div id="playlistsScreen" class="screen">
   <div class="topbar">
     <div class="topbar-left">
@@ -735,25 +299,13 @@
       <div class="topbar-subtitle" id="playlistCountLabel">0 playlist</div>
     </div>
   </div>
-
-  <div class="content-pad">
-    <div id="playlistListContainer">
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        <h3>Playlist yok</h3>
-        <p>+ butonuna tıklayarak<br>ilk playlist'ini oluştur</p>
-      </div>
-    </div>
-  </div>
-
+  <div class="content-pad"><div id="playlistListContainer"></div></div>
   <button class="fab" onclick="openNewPlaylistModal()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </button>
 </div>
 
-<!-- ══════════════════════════════════
-     SCREEN 4: PLAYLIST DETAIL
-════════════════════════════════════ -->
+<!-- PLAYLIST DETAIL -->
 <div id="playlistDetailScreen" class="screen">
   <div class="topbar">
     <div class="topbar-left">
@@ -761,7 +313,7 @@
       <div class="topbar-subtitle" id="plDetailSubtitle"></div>
     </div>
     <div style="display:flex;gap:4px">
-      <button class="icon-btn" id="plRenameBtn" onclick="renameCurrentPlaylist()">
+      <button class="icon-btn" onclick="renameCurrentPlaylist()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </button>
       <button class="icon-btn" onclick="goToPlaylists()">
@@ -769,34 +321,24 @@
       </button>
     </div>
   </div>
-
-  <div style="flex:1;overflow-y:auto;padding-bottom:20px">
-    <div id="plDetailSongList"></div>
-  </div>
+  <div style="flex:1;overflow-y:auto;padding-bottom:20px"><div id="plDetailSongList"></div></div>
 </div>
 
-<!-- ══════════════════════════════════
-     SCREEN 5: IMPORT
-════════════════════════════════════ -->
+<!-- IMPORT -->
 <div id="importScreen" class="screen">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-title">Şarkı Ekle</div>
-    </div>
+    <div class="topbar-left"><div class="topbar-title">Şarkı Ekle</div></div>
     <button class="icon-btn" onclick="showScreen('songsScreen')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
-
-  <div class="content-pad" style="padding-top:16px">
-
-    <!-- PDF / DOCX -->
+  <div class="content-pad">
     <div class="import-section">
       <div class="import-section-header">📄 PDF veya Word Dosyası</div>
       <div class="import-section-body">
         <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <div class="upload-zone-text">Dosya seç veya sürükle</div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="upload-zone-text">Dosya seç</div>
           <div class="upload-zone-sub">.pdf veya .docx</div>
         </div>
         <input type="file" id="fileInput" class="file-input" accept=".pdf,.docx,.doc" onchange="handleFileUpload(this)">
@@ -806,13 +348,11 @@
         </div>
       </div>
     </div>
-
-    <!-- OCR -->
     <div class="import-section">
       <div class="import-section-header">📷 Fotoğraf / Ekran Görüntüsü (OCR)</div>
       <div class="import-section-body">
         <div class="upload-zone" onclick="document.getElementById('imageInput').click()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           <div class="upload-zone-text">Fotoğraf seç</div>
           <div class="upload-zone-sub">JPG, PNG — metin otomatik okunur</div>
         </div>
@@ -823,38 +363,23 @@
         </div>
       </div>
     </div>
-
-    <!-- MANUAL -->
     <div class="import-section">
       <div class="import-section-header">✏️ Manuel Ekle</div>
       <div class="import-section-body">
         <div class="manual-add-form">
-          <div>
-            <div class="form-label">Şarkı Adı *</div>
-            <input type="text" class="form-input" id="manualTitle" placeholder="Şarkı adı">
-          </div>
-          <div>
-            <div class="form-label">Sanatçı</div>
-            <input type="text" class="form-input" id="manualArtist" placeholder="Sanatçı adı">
-          </div>
-          <div>
-            <div class="form-label">Sözler / Akorlar</div>
-            <textarea class="form-input" id="manualLyrics" placeholder="Sözleri buraya yaz…"></textarea>
-          </div>
-          <button class="import-btn" onclick="addManualSong()">
+          <div><div class="form-label">Şarkı Adı *</div><input type="text" class="form-input" id="manualTitle" placeholder="Şarkı adı"></div>
+          <div><div class="form-label">Sanatçı</div><input type="text" class="form-input" id="manualArtist" placeholder="Sanatçı adı"></div>
+          <button class="import-btn" onclick="addManualSongAndEdit()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Şarkıyı Ekle
+            Ekle ve Düzenle
           </button>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     BOTTOM NAV
-════════════════════════════════════ -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-btn active" id="navSongs" onclick="switchTab('songs')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -866,11 +391,7 @@
   </button>
 </nav>
 
-<!-- ══════════════════════════════════
-     MODALS
-════════════════════════════════════ -->
-
-<!-- Add to playlist modal -->
+<!-- MODALS -->
 <div class="modal-overlay" id="addToPlaylistModal" onclick="closeModalIfBg(event,'addToPlaylistModal')">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -882,648 +403,342 @@
     </div>
   </div>
 </div>
-
-<!-- New playlist modal -->
 <div class="modal-overlay" id="newPlaylistModal" onclick="closeModalIfBg(event,'newPlaylistModal')">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">Yeni Playlist</div>
-    <div class="modal-content">
-      <input type="text" class="modal-input" id="newPlaylistName" placeholder="Playlist adı (örn: Sahne 1, Düğün…)">
-      <p style="font-size:13px;color:var(--ink-light);line-height:1.6">Playlist oluşturduktan sonra şarkı sayfasından şarkıları ekleyebilirsin.</p>
-    </div>
+    <div class="modal-content"><input type="text" class="modal-input" id="newPlaylistName" placeholder="Playlist adı…"></div>
     <div class="modal-actions">
       <button class="modal-btn" onclick="closeModal('newPlaylistModal')">Vazgeç</button>
       <button class="modal-btn primary" onclick="createPlaylist()">Oluştur</button>
     </div>
   </div>
 </div>
-
-<!-- Song options modal -->
 <div class="modal-overlay" id="songOptionsModal" onclick="closeModalIfBg(event,'songOptionsModal')">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="songOptionsTitle">Seçenekler</div>
+    <div class="modal-title" id="songOptionsTitle"></div>
     <div class="modal-content">
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <button onclick="editCurrentSong()" style="padding:14px 0;border:none;background:none;font-size:15px;color:var(--ink);text-align:left;cursor:pointer;border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;gap:12px;font-family:'DM Sans',sans-serif;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Şarkıyı Düzenle
-        </button>
-        <button onclick="deleteCurrentSong()" style="padding:14px 0;border:none;background:none;font-size:15px;color:#C0392B;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px;font-family:'DM Sans',sans-serif;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-          Şarkıyı Sil
-        </button>
-      </div>
+      <button onclick="openEditor();closeModal('songOptionsModal')" style="padding:14px 0;border:none;background:none;font-size:15px;color:var(--ink);text-align:left;cursor:pointer;border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;gap:12px;font-family:'DM Sans',sans-serif;width:100%">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Şarkıyı Düzenle
+      </button>
+      <button onclick="deleteCurrentSong()" style="padding:14px 0;border:none;background:none;font-size:15px;color:#C0392B;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px;font-family:'DM Sans',sans-serif;width:100%">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        Şarkıyı Sil
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Edit song modal -->
-<div class="modal-overlay" id="editSongModal" onclick="closeModalIfBg(event,'editSongModal')">
-  <div class="modal-sheet" style="max-height:90vh">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Şarkıyı Düzenle</div>
-    <div class="modal-content">
-      <div class="form-label">Şarkı Adı</div>
-      <input type="text" class="modal-input" id="editTitle">
-      <div class="form-label" style="margin-top:8px">Sanatçı</div>
-      <input type="text" class="modal-input" id="editArtist">
-      <div class="form-label" style="margin-top:8px">Sözler / Akorlar</div>
-      <textarea style="width:100%;min-height:200px;padding:11px 14px;border:1.5px solid var(--ink-faint);border-radius:10px;font-size:14px;font-family:'Lora',serif;color:var(--ink);background:var(--cream);outline:none;resize:vertical;line-height:1.7;-webkit-appearance:none" id="editLyrics"></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-btn" onclick="closeModal('editSongModal')">Vazgeç</button>
-      <button class="modal-btn primary" onclick="saveEditedSong()">Kaydet</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- ══════════════════════════════════
-     SCRIPTS
-════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
-
 <script>
-// ═══════════════════════════════
-// DATA
-// ═══════════════════════════════
-let songs = [];
-let playlists = [];
-let currentSongId = null;
-let currentPlaylistId = null;
-let previousScreen = 'songsScreen';
+let songs=[], playlists=[], currentSongId=null, currentPlaylistId=null, previousScreen='songsScreen';
+const SK='rep_songs_v4', PK='rep_playlists_v2';
 
-const SONGS_KEY = 'repertoire_songs_v2';
-const PLAYLISTS_KEY = 'repertoire_playlists_v2';
+function loadData(){try{const s=localStorage.getItem(SK),p=localStorage.getItem(PK);songs=s?JSON.parse(s):[];playlists=p?JSON.parse(p):[]}catch(e){songs=[];playlists=[]}}
+function saveData(){localStorage.setItem(SK,JSON.stringify(songs));localStorage.setItem(PK,JSON.stringify(playlists))}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
 
-function loadData() {
-  try {
-    const s = localStorage.getItem(SONGS_KEY);
-    const p = localStorage.getItem(PLAYLISTS_KEY);
-    songs = s ? JSON.parse(s) : [];
-    playlists = p ? JSON.parse(p) : [];
-  } catch(e) { songs = []; playlists = []; }
-}
-
-function saveData() {
-  localStorage.setItem(SONGS_KEY, JSON.stringify(songs));
-  localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(playlists));
-}
-
-function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-
-// ═══════════════════════════════
 // SCREENS
-// ═══════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const noNav = ['songDetailScreen','importScreen'];
-  document.getElementById('bottomNav').style.display = noNav.includes(id) ? 'none' : 'flex';
+  const noNav=['songDetailScreen','importScreen','editorScreen'];
+  document.getElementById('bottomNav').style.display=noNav.includes(id)?'none':'flex';
+  closePalettes();
 }
-
-function switchTab(tab) {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  if (tab === 'songs') {
-    document.getElementById('navSongs').classList.add('active');
-    showScreen('songsScreen');
-    renderSongList();
-  } else {
-    document.getElementById('navPlaylists').classList.add('active');
-    showScreen('playlistsScreen');
-    renderPlaylists();
-  }
+function switchTab(tab){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(tab==='songs'){document.getElementById('navSongs').classList.add('active');showScreen('songsScreen');renderSongList();}
+  else{document.getElementById('navPlaylists').classList.add('active');showScreen('playlistsScreen');renderPlaylists();}
 }
-
-function goBack() {
+function goBack(){
   showScreen(previousScreen);
-  if (previousScreen === 'songsScreen') renderSongList();
-  if (previousScreen === 'playlistDetailScreen') renderPlaylistDetail(currentPlaylistId);
+  if(previousScreen==='songsScreen')renderSongList();
+  if(previousScreen==='playlistDetailScreen')renderPlaylistDetail(currentPlaylistId);
 }
+function goToImport(){previousScreen='songsScreen';showScreen('importScreen')}
+function goToPlaylists(){showScreen('playlistsScreen');renderPlaylists();document.getElementById('navPlaylists').classList.add('active');document.getElementById('navSongs').classList.remove('active')}
 
-function goToImport() {
-  previousScreen = 'songsScreen';
-  showScreen('importScreen');
-}
-
-function goToPlaylists() {
-  showScreen('playlistsScreen');
-  renderPlaylists();
-  document.getElementById('navPlaylists').classList.add('active');
-  document.getElementById('navSongs').classList.remove('active');
-}
-
-// ═══════════════════════════════
 // SONG LIST
-// ═══════════════════════════════
-function renderSongList() {
-  const q = (document.getElementById('searchInput').value || '').toLowerCase();
-  const filtered = songs.filter(s =>
-    s.title.toLowerCase().includes(q) || (s.artist||'').toLowerCase().includes(q)
-  ).sort((a,b) => a.title.localeCompare(b.title,'tr'));
-
-  document.getElementById('songCountLabel').textContent = `${songs.length} şarkı`;
-
-  const container = document.getElementById('songListContainer');
-  if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      <h3>${q ? 'Sonuç yok' : 'Henüz şarkı yok'}</h3>
-      <p>${q ? '"' + q + '" için sonuç bulunamadı' : 'PDF, Word veya fotoğraf yükleyerek şarkılarını ekle'}</p>
-    </div>`;
-    return;
-  }
-
-  // Group by first letter
-  const groups = {};
-  filtered.forEach(s => {
-    const letter = s.title[0].toUpperCase();
-    if (!groups[letter]) groups[letter] = [];
-    groups[letter].push(s);
-  });
-
-  let html = '';
-  Object.keys(groups).sort((a,b) => a.localeCompare(b,'tr')).forEach(letter => {
-    html += `<div class="alpha-section"><div class="alpha-header">${letter}</div>`;
-    groups[letter].forEach(song => {
-      const hasChords = /\b[A-G][#b]?m?\b/.test(song.lyrics || '');
-      const inPlaylists = playlists.filter(p => p.songs.includes(song.id));
-      const initial = song.title[0].toUpperCase();
-      html += `<button class="song-item" onclick="openSong('${song.id}')">
-        <div class="song-icon ${hasChords ? 'has-chords' : ''}">${initial}</div>
+function renderSongList(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const filtered=songs.filter(s=>s.title.toLowerCase().includes(q)||(s.artist||'').toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title,'tr'));
+  document.getElementById('songCountLabel').textContent=`${songs.length} şarkı`;
+  const container=document.getElementById('songListContainer');
+  if(!filtered.length){container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><h3>${q?'Sonuç yok':'Henüz şarkı yok'}</h3><p>${q?'"'+q+'" için sonuç bulunamadı':'PDF, Word veya fotoğraf yükleyerek şarkılarını ekle'}</p></div>`;return;}
+  const groups={};
+  filtered.forEach(s=>{const l=s.title[0].toUpperCase();if(!groups[l])groups[l]=[];groups[l].push(s)});
+  let html='';
+  Object.keys(groups).sort((a,b)=>a.localeCompare(b,'tr')).forEach(letter=>{
+    html+=`<div><div class="alpha-header">${letter}</div>`;
+    groups[letter].forEach(song=>{
+      const hc=detectChords(song.richHtml||song.lyrics||'');
+      const inPl=playlists.filter(p=>p.songs.includes(song.id));
+      html+=`<button class="song-item" onclick="openSong('${song.id}')">
+        <div class="song-icon ${hc?'has-chords':''}">${song.title[0].toUpperCase()}</div>
         <div class="song-info">
           <div class="song-name">${escHtml(song.title)}</div>
-          ${song.artist ? `<div class="song-artist">${escHtml(song.artist)}</div>` : ''}
-          <div class="song-badges">
-            ${hasChords ? '<span class="badge badge-chord">Akordlu</span>' : ''}
-            ${inPlaylists.map(p => `<span class="badge badge-playlist">${escHtml(p.name)}</span>`).join('')}
-          </div>
+          ${song.artist?`<div class="song-artist">${escHtml(song.artist)}</div>`:''}
+          <div class="song-badges">${hc?'<span class="badge badge-chord">Akordlu</span>':''}${inPl.map(p=>`<span class="badge badge-playlist">${escHtml(p.name)}</span>`).join('')}</div>
         </div>
-        <div class="song-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="song-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
       </button>`;
     });
-    html += `</div>`;
+    html+=`</div>`;
   });
-  container.innerHTML = html;
+  container.innerHTML=html;
 }
+function detectChords(t){return /\b[A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?\b/.test((t||'').replace(/<[^>]*>/g,''))}
 
-// ═══════════════════════════════
 // SONG DETAIL
-// ═══════════════════════════════
-function openSong(id, fromPlaylist) {
-  const song = songs.find(s => s.id === id);
-  if (!song) return;
-  currentSongId = id;
-  previousScreen = fromPlaylist ? 'playlistDetailScreen' : 'songsScreen';
-
-  document.getElementById('detailSongTitle').textContent = song.title;
-  document.getElementById('detailSongArtist').textContent = song.artist || '';
-
-  const hasChords = /\b[A-G][#b]?m?\b/.test(song.lyrics || '');
-  const meta = document.getElementById('detailMeta');
-  meta.innerHTML = hasChords ? '<span class="badge badge-chord" style="font-size:12px;padding:3px 10px">♪ Akordlu</span>' : '';
-
-  document.getElementById('detailLyrics').innerHTML = renderLyrics(song.lyrics || '');
-
+function openSong(id,fromPlaylist){
+  const song=songs.find(s=>s.id===id);if(!song)return;
+  currentSongId=id;
+  previousScreen=fromPlaylist?'playlistDetailScreen':'songsScreen';
+  document.getElementById('detailSongTitle').textContent=song.title;
+  document.getElementById('detailSongArtist').textContent=song.artist||'';
+  const hc=detectChords(song.richHtml||song.lyrics||'');
+  document.getElementById('detailMeta').innerHTML=hc?'<span class="badge badge-chord" style="font-size:12px;padding:3px 10px">♪ Akordlu</span>':'';
+  document.getElementById('songOptionsTitle').textContent=song.title;
+  const el=document.getElementById('detailLyrics');
+  if(song.richHtml){el.innerHTML=song.richHtml;el.style.cssText='font-family:Lora,serif;font-size:16px;line-height:1.85';}
+  else{el.innerHTML=renderPlain(song.lyrics||'');el.style.cssText='';}
   showScreen('songDetailScreen');
 }
 
-function renderLyrics(text) {
-  if (!text) return '<span style="color:var(--ink-light);font-style:italic">Söz yok</span>';
-  const chordRegex = /^[\s]*([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?(?:\/[A-G][#b]?)?[\s]+)+[\s]*$/;
-  const lines = text.split('\n');
-  let html = '';
-  lines.forEach(line => {
-    const trimmed = line.trim();
-    if (chordRegex.test(trimmed) && trimmed.length > 0) {
-      html += `<div class="chord-line">${escHtml(line)}</div>`;
-    } else {
-      html += `<div>${escHtml(line) || '&nbsp;'}</div>`;
-    }
-  });
-  return html;
-}
-
-// ═══════════════════════════════
-// PLAYLISTS
-// ═══════════════════════════════
-function renderPlaylists() {
-  document.getElementById('playlistCountLabel').textContent = `${playlists.length} playlist`;
-  const container = document.getElementById('playlistListContainer');
-  if (!playlists.length) {
-    container.innerHTML = `<div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      <h3>Playlist yok</h3>
-      <p>+ butonuna tıklayarak<br>ilk playlist'ini oluştur</p>
-    </div>`;
-    return;
-  }
-  container.innerHTML = playlists.map(pl => `
-    <button class="playlist-card" onclick="openPlaylist('${pl.id}')">
-      <div class="playlist-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      </div>
-      <div class="playlist-info">
-        <div class="playlist-name">${escHtml(pl.name)}</div>
-        <div class="playlist-count">${pl.songs.length} şarkı</div>
-      </div>
-      <div class="playlist-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
-    </button>
-  `).join('');
-}
-
-function openPlaylist(id) {
-  currentPlaylistId = id;
-  renderPlaylistDetail(id);
-  showScreen('playlistDetailScreen');
-}
-
-function renderPlaylistDetail(id) {
-  const pl = playlists.find(p => p.id === id);
-  if (!pl) return;
-  document.getElementById('plDetailTitle').textContent = pl.name;
-  document.getElementById('plDetailSubtitle').textContent = `${pl.songs.length} şarkı`;
-  const container = document.getElementById('plDetailSongList');
-  if (!pl.songs.length) {
-    container.innerHTML = `<div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      <h3>Şarkı yok</h3>
-      <p>Şarkı sayfasından "Playlist'e ekle"<br>diyerek buraya ekleyebilirsin</p>
-    </div>`;
-    return;
-  }
-  container.innerHTML = pl.songs.map((sid, idx) => {
-    const song = songs.find(s => s.id === sid);
-    if (!song) return '';
-    return `<div class="playlist-song-item">
-      <div class="ps-num">${idx+1}</div>
-      <div class="ps-info" onclick="openSong('${song.id}', true)">
-        <div class="ps-name">${escHtml(song.title)}</div>
-        ${song.artist ? `<div class="ps-artist">${escHtml(song.artist)}</div>` : ''}
-      </div>
-      <button class="ps-remove" onclick="removeFromPlaylist('${id}','${song.id}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>`;
+function renderPlain(text){
+  if(!text)return'<span style="color:var(--ink-light);font-style:italic">Söz yok</span>';
+  const cr=/^[\s]*([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?(?:\/[A-G][#b]?)?[\s]*){1,}[\s]*$/;
+  return text.split('\n').map(line=>{
+    if(cr.test(line.trim())&&line.trim().length>0)return`<div class="chord-line">${escHtml(line)}</div>`;
+    return`<div style="font-family:'Lora',serif;font-size:16px;line-height:1.85">${escHtml(line)||'&nbsp;'}</div>`;
   }).join('');
 }
 
-function removeFromPlaylist(plId, songId) {
-  const pl = playlists.find(p => p.id === plId);
-  if (!pl) return;
-  pl.songs = pl.songs.filter(s => s !== songId);
-  saveData();
-  renderPlaylistDetail(plId);
-  document.getElementById('plDetailSubtitle').textContent = `${pl.songs.length} şarkı`;
-  showToast('Şarkı kaldırıldı');
+// EDITOR
+function openEditor(){
+  const song=songs.find(s=>s.id===currentSongId);if(!song)return;
+  document.getElementById('editorTitle').value=song.title;
+  document.getElementById('editorArtist').value=song.artist||'';
+  const ed=document.getElementById('richEditor');
+  if(song.richHtml){ed.innerHTML=song.richHtml;}
+  else if(song.lyrics){ed.innerHTML=song.lyrics.split('\n').map(l=>`<div>${escHtml(l)||'<br>'}</div>`).join('');}
+  else{ed.innerHTML='';}
+  showScreen('editorScreen');
+  setTimeout(()=>ed.focus(),300);
+}
+function closeEditor(){showScreen('songDetailScreen')}
+function saveFromEditor(){
+  const song=songs.find(s=>s.id===currentSongId);if(!song)return;
+  const t=document.getElementById('editorTitle').value.trim();
+  if(!t){showToast('Şarkı adı boş olamaz');return;}
+  song.title=t;song.artist=document.getElementById('editorArtist').value.trim();
+  song.richHtml=document.getElementById('richEditor').innerHTML;
+  song.lyrics=document.getElementById('richEditor').innerText;
+  saveData();showToast('Kaydedildi ✓');
+  openSong(currentSongId,previousScreen==='playlistDetailScreen');
 }
 
-function renameCurrentPlaylist() {
-  const pl = playlists.find(p => p.id === currentPlaylistId);
-  if (!pl) return;
-  const name = prompt('Yeni playlist adı:', pl.name);
-  if (name && name.trim()) {
-    pl.name = name.trim();
-    saveData();
-    document.getElementById('plDetailTitle').textContent = pl.name;
-    showToast('Playlist yeniden adlandırıldı');
+// FORMAT
+function fmt(cmd){document.getElementById('richEditor').focus();document.execCommand(cmd,false,null)}
+function fmtSize(size){
+  if(!size)return;
+  const ed=document.getElementById('richEditor');ed.focus();
+  const sel=window.getSelection();
+  if(sel&&sel.rangeCount>0&&!sel.isCollapsed){
+    const range=sel.getRangeAt(0);
+    const span=document.createElement('span');span.style.fontSize=size;
+    try{range.surroundContents(span);}catch(e){document.execCommand('fontSize',false,'3');ed.querySelectorAll('font[size="3"]').forEach(f=>{f.removeAttribute('size');f.style.fontSize=size;});}
+  }
+}
+function applyChordStyle(){
+  const ed=document.getElementById('richEditor');ed.focus();
+  const sel=window.getSelection();
+  if(sel&&sel.rangeCount>0&&!sel.isCollapsed){
+    const range=sel.getRangeAt(0);const span=document.createElement('span');
+    span.style.cssText='color:#1A5276;font-family:monospace;font-weight:700;font-size:13px';
+    try{range.surroundContents(span);}catch(e){}
   }
 }
 
-// ═══════════════════════════════
+function closePalettes(){document.getElementById('textPal').classList.remove('open');document.getElementById('hiPal').classList.remove('open')}
+function togglePalette(type){
+  const tp=document.getElementById('textPal'),hp=document.getElementById('hiPal');
+  const tb=document.getElementById('formatToolbar');
+  const rect=tb.getBoundingClientRect();
+  if(type==='text'){hp.classList.remove('open');tp.style.top=(rect.bottom+4)+'px';tp.style.left='10px';tp.classList.toggle('open');}
+  else{tp.classList.remove('open');hp.style.top=(rect.bottom+4)+'px';hp.style.left='10px';hp.classList.toggle('open');}
+}
+function applyCol(color,type){
+  closePalettes();document.getElementById('richEditor').focus();
+  if(type==='text'){document.execCommand('foreColor',false,color);document.getElementById('textColorDot').style.background=color;}
+  else{document.execCommand('hiliteColor',false,color==='transparent'?'transparent':color);document.getElementById('hlColorDot').style.background=color==='transparent'?'#fff':color;}
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.fmt-btn')&&!e.target.closest('.color-palette'))closePalettes()});
+
+// PLAYLISTS
+function renderPlaylists(){
+  document.getElementById('playlistCountLabel').textContent=`${playlists.length} playlist`;
+  const c=document.getElementById('playlistListContainer');
+  if(!playlists.length){c.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><h3>Playlist yok</h3><p>+ butonuna tıklayarak oluştur</p></div>`;return;}
+  c.innerHTML=playlists.map(pl=>`<button class="playlist-card" onclick="openPlaylist('${pl.id}')">
+    <div class="playlist-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+    <div class="playlist-info"><div class="playlist-name">${escHtml(pl.name)}</div><div class="playlist-count">${pl.songs.length} şarkı</div></div>
+    <div style="color:var(--ink-faint)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+  </button>`).join('');
+}
+function openPlaylist(id){currentPlaylistId=id;renderPlaylistDetail(id);showScreen('playlistDetailScreen')}
+function renderPlaylistDetail(id){
+  const pl=playlists.find(p=>p.id===id);if(!pl)return;
+  document.getElementById('plDetailTitle').textContent=pl.name;
+  document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;
+  const c=document.getElementById('plDetailSongList');
+  if(!pl.songs.length){c.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><h3>Şarkı yok</h3><p>Şarkı sayfasından "Playlist'e ekle" diyerek buraya ekleyebilirsin</p></div>`;return;}
+  c.innerHTML=pl.songs.map((sid,i)=>{const song=songs.find(s=>s.id===sid);if(!song)return'';
+    return`<div class="playlist-song-item"><div class="ps-num">${i+1}</div><div class="ps-info" onclick="openSong('${song.id}',true)"><div class="ps-name">${escHtml(song.title)}</div>${song.artist?`<div class="ps-artist">${escHtml(song.artist)}</div>`:''}</div><button class="ps-remove" onclick="removeFromPlaylist('${id}','${song.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`;
+  }).join('');
+}
+function removeFromPlaylist(plId,songId){const pl=playlists.find(p=>p.id===plId);if(!pl)return;pl.songs=pl.songs.filter(s=>s!==songId);saveData();renderPlaylistDetail(plId);document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;showToast('Şarkı kaldırıldı')}
+function renameCurrentPlaylist(){const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;const n=prompt('Yeni playlist adı:',pl.name);if(n&&n.trim()){pl.name=n.trim();saveData();document.getElementById('plDetailTitle').textContent=pl.name;showToast('Yeniden adlandırıldı')}}
+
 // MODALS
-// ═══════════════════════════════
-function openNewPlaylistModal() {
-  document.getElementById('newPlaylistName').value = '';
-  document.getElementById('newPlaylistModal').classList.add('open');
-  setTimeout(() => document.getElementById('newPlaylistName').focus(), 300);
-}
-
-function createPlaylist() {
-  const name = document.getElementById('newPlaylistName').value.trim();
-  if (!name) { showToast('Playlist adı girin'); return; }
-  playlists.push({ id: genId(), name, songs: [] });
-  saveData();
-  closeModal('newPlaylistModal');
-  renderPlaylists();
-  showToast('Playlist oluşturuldu');
-}
-
-function openAddToPlaylist() {
-  const song = songs.find(s => s.id === currentSongId);
-  if (!song) return;
-  if (!playlists.length) {
-    showToast('Önce bir playlist oluştur');
-    return;
-  }
-  const container = document.getElementById('playlistCheckList');
-  container.innerHTML = playlists.map(pl => {
-    const checked = pl.songs.includes(song.id);
-    return `<div class="modal-playlist-item" onclick="togglePlaylistCheck('${pl.id}')">
-      <div class="check-circle ${checked ? 'checked' : ''}" id="check_${pl.id}"></div>
-      <div>
-        <div class="modal-pl-name">${escHtml(pl.name)}</div>
-        <div class="modal-pl-count">${pl.songs.length} şarkı</div>
-      </div>
-    </div>`;
+function openNewPlaylistModal(){document.getElementById('newPlaylistName').value='';document.getElementById('newPlaylistModal').classList.add('open');setTimeout(()=>document.getElementById('newPlaylistName').focus(),300)}
+function createPlaylist(){const n=document.getElementById('newPlaylistName').value.trim();if(!n){showToast('Playlist adı girin');return;}playlists.push({id:genId(),name:n,songs:[]});saveData();closeModal('newPlaylistModal');renderPlaylists();showToast('Playlist oluşturuldu')}
+function openAddToPlaylist(){
+  if(!playlists.length){showToast('Önce bir playlist oluştur');return;}
+  const song=songs.find(s=>s.id===currentSongId);if(!song)return;
+  document.getElementById('playlistCheckList').innerHTML=playlists.map(pl=>{const ch=pl.songs.includes(song.id);
+    return`<div class="modal-playlist-item" onclick="toggleCheck('${pl.id}')"><div class="check-circle ${ch?'checked':''}" id="chk_${pl.id}"></div><div><div class="modal-pl-name">${escHtml(pl.name)}</div><div class="modal-pl-count">${pl.songs.length} şarkı</div></div></div>`;
   }).join('');
   document.getElementById('addToPlaylistModal').classList.add('open');
 }
-
-function togglePlaylistCheck(plId) {
-  const el = document.getElementById('check_' + plId);
-  el.classList.toggle('checked');
+function toggleCheck(id){document.getElementById('chk_'+id)?.classList.toggle('checked')}
+function saveToPlaylists(){
+  const song=songs.find(s=>s.id===currentSongId);if(!song)return;
+  playlists.forEach(pl=>{const ch=document.getElementById('chk_'+pl.id)?.classList.contains('checked');const was=pl.songs.includes(song.id);if(ch&&!was)pl.songs.push(song.id);else if(!ch&&was)pl.songs=pl.songs.filter(s=>s!==song.id);});
+  saveData();closeModal('addToPlaylistModal');showToast('Playlist güncellendi');
 }
+function openSongOptions(){const song=songs.find(s=>s.id===currentSongId);if(song)document.getElementById('songOptionsTitle').textContent=song.title;document.getElementById('songOptionsModal').classList.add('open')}
+function deleteCurrentSong(){closeModal('songOptionsModal');const song=songs.find(s=>s.id===currentSongId);if(!confirm(`"${song?.title}" silinsin mi?`))return;songs=songs.filter(s=>s.id!==currentSongId);playlists.forEach(pl=>{pl.songs=pl.songs.filter(s=>s!==currentSongId)});saveData();goBack();renderSongList();showToast('Şarkı silindi')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function closeModalIfBg(e,id){if(e.target.id===id)closeModal(id)}
 
-function saveToPlaylists() {
-  const song = songs.find(s => s.id === currentSongId);
-  if (!song) return;
-  let changed = 0;
-  playlists.forEach(pl => {
-    const checked = document.getElementById('check_' + pl.id)?.classList.contains('checked');
-    const wasIn = pl.songs.includes(song.id);
-    if (checked && !wasIn) { pl.songs.push(song.id); changed++; }
-    else if (!checked && wasIn) { pl.songs = pl.songs.filter(s => s !== song.id); changed++; }
-  });
-  if (changed) { saveData(); showToast('Playlist güncellendi'); }
-  closeModal('addToPlaylistModal');
-}
-
-function openSongOptions() {
-  const song = songs.find(s => s.id === currentSongId);
-  if (!song) return;
-  document.getElementById('songOptionsTitle').textContent = song.title;
-  document.getElementById('songOptionsModal').classList.add('open');
-}
-
-function editCurrentSong() {
-  closeModal('songOptionsModal');
-  const song = songs.find(s => s.id === currentSongId);
-  if (!song) return;
-  document.getElementById('editTitle').value = song.title;
-  document.getElementById('editArtist').value = song.artist || '';
-  document.getElementById('editLyrics').value = song.lyrics || '';
-  document.getElementById('editSongModal').classList.add('open');
-}
-
-function saveEditedSong() {
-  const song = songs.find(s => s.id === currentSongId);
-  if (!song) return;
-  const t = document.getElementById('editTitle').value.trim();
-  if (!t) { showToast('Şarkı adı boş olamaz'); return; }
-  song.title = t;
-  song.artist = document.getElementById('editArtist').value.trim();
-  song.lyrics = document.getElementById('editLyrics').value;
-  saveData();
-  closeModal('editSongModal');
-  openSong(currentSongId, previousScreen === 'playlistDetailScreen');
-  showToast('Kaydedildi');
-}
-
-function deleteCurrentSong() {
-  closeModal('songOptionsModal');
-  const song = songs.find(s => s.id === currentSongId);
-  if (!confirm(`"${song?.title}" silinsin mi?`)) return;
-  songs = songs.filter(s => s.id !== currentSongId);
-  playlists.forEach(pl => { pl.songs = pl.songs.filter(s => s !== currentSongId); });
-  saveData();
-  goBack();
-  renderSongList();
-  showToast('Şarkı silindi');
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-function closeModalIfBg(e, id) {
-  if (e.target.id === id) closeModal(id);
-}
-
-// ═══════════════════════════════
-// FILE IMPORT — PDF
-// ═══════════════════════════════
-async function handleFileUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  input.value = '';
-
-  const ext = file.name.split('.').pop().toLowerCase();
-  const progressWrap = document.getElementById('fileProgress');
-  const progressFill = document.getElementById('progressFill');
-  const progressText = document.getElementById('progressText');
-
-  progressWrap.style.display = 'block';
-  progressFill.style.width = '10%';
-  progressText.textContent = 'Dosya okunuyor…';
-
-  try {
-    let text = '';
-    if (ext === 'pdf') {
-      text = await extractPDF(file, (p) => {
-        progressFill.style.width = (10 + p * 70) + '%';
-        progressText.textContent = `Sayfa işleniyor… %${Math.round(p*100)}`;
-      });
-    } else {
-      const buf = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer: buf });
-      text = result.value;
-      progressFill.style.width = '80%';
+// PDF IMPORT (FIXED - preserves line structure)
+async function handleFileUpload(input){
+  const file=input.files[0];if(!file)return;input.value='';
+  const ext=file.name.split('.').pop().toLowerCase();
+  const pw=document.getElementById('fileProgress'),pf=document.getElementById('progressFill'),pt=document.getElementById('progressText');
+  pw.style.display='block';pf.style.width='10%';pt.textContent='Dosya okunuyor…';
+  try{
+    let pages=[];
+    if(ext==='pdf'){
+      pages=await extractPDFPages(file,p=>{pf.style.width=(10+p*70)+'%';pt.textContent=`Sayfa işleniyor… %${Math.round(p*100)}`;});
+    }else{
+      const buf=await file.arrayBuffer();
+      const res=await mammoth.extractRawText({arrayBuffer:buf});
+      pages=res.value.split(/\n{3,}/).map(p=>p.trim()).filter(Boolean);
+      pf.style.width='80%';
     }
+    pt.textContent='Şarkılar ayrıştırılıyor…';pf.style.width='90%';
+    const imported=parseSongPages(pages);
+    pf.style.width='100%';
+    if(!imported.length){pt.textContent='Şarkı bulunamadı';showToast('Şarkı ayrıştırılamadı');return;}
+    let added=0;
+    imported.forEach(s=>{const ex=songs.find(x=>x.title.toLowerCase()===s.title.toLowerCase());if(!ex){songs.push({...s,id:genId()});added++;}});
+    saveData();renderSongList();showToast(`${added} şarkı eklendi`);
+    pt.textContent=`${added} şarkı eklendi ✓ — düzenlemek için şarkıya tıkla`;
+    setTimeout(()=>{pw.style.display='none'},4000);
+  }catch(e){pt.textContent='Hata: '+e.message;console.error(e)}
+}
 
-    progressText.textContent = 'Şarkılar ayrıştırılıyor…';
-    progressFill.style.width = '90%';
-
-    const imported = parseSongsFromText(text);
-    progressFill.style.width = '100%';
-
-    if (!imported.length) {
-      progressText.textContent = 'Şarkı bulunamadı';
-      showToast('Şarkı ayrıştırılamadı. Manuel ekle butonunu dene.');
-      return;
-    }
-
-    let added = 0;
-    imported.forEach(s => {
-      const exists = songs.find(x => x.title.toLowerCase() === s.title.toLowerCase());
-      if (!exists) { songs.push({ ...s, id: genId() }); added++; }
+async function extractPDFPages(file,onProgress){
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  const pages=[];
+  for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    // Group items by Y coordinate to reconstruct lines
+    const lineMap={};
+    content.items.forEach(item=>{
+      const y=Math.round(item.transform[5]*10)/10; // round to 1 decimal
+      if(!lineMap[y])lineMap[y]=[];
+      lineMap[y].push({x:item.transform[4],str:item.str});
     });
-    saveData();
-    renderSongList();
-    showToast(`${added} şarkı eklendi (toplam ${imported.length} bulundu)`);
-    progressText.textContent = `${added} şarkı eklendi ✓`;
-    setTimeout(() => { progressWrap.style.display = 'none'; }, 3000);
-
-  } catch(e) {
-    progressText.textContent = 'Hata: ' + e.message;
-    console.error(e);
+    // Sort Y descending (PDF coords: bottom=0), then X ascending within each line
+    const ys=Object.keys(lineMap).map(Number).sort((a,b)=>b-a);
+    const lines=ys.map(y=>{
+      const items=lineMap[y].sort((a,b)=>a.x-b.x);
+      return items.map(it=>it.str).join(' ').trim();
+    }).filter(l=>l.length>0);
+    pages.push(lines.join('\n'));
+    onProgress(i/pdf.numPages);
   }
+  return pages;
 }
 
-async function extractPDF(file, onProgress) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  const buf = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-  let text = '';
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    const pageText = content.items.map(item => item.str).join(' ');
-    text += '\n\n--- SAYFA ' + i + ' ---\n' + pageText;
-    onProgress(i / pdf.numPages);
-  }
-  return text;
-}
-
-// ═══════════════════════════════
-// PARSE SONGS FROM TEXT
-// ═══════════════════════════════
-function parseSongsFromText(rawText) {
-  const songs = [];
-  // Split by "--- SAYFA N ---" markers from PDF
-  const pages = rawText.split(/--- SAYFA \d+ ---/).map(p => p.trim()).filter(Boolean);
-
-  pages.forEach(pageText => {
-    if (!pageText || pageText.length < 10) return;
-    // Skip the first page if it looks like a table of contents (lots of numbers and dots)
-    const numberedLines = (pageText.match(/^\d+\./gm) || []).length;
-    if (numberedLines > 5) return; // Looks like index page, skip
-
-    // Try to find song title and artist from first line(s)
-    // Common patterns: "ARTIST – TITLE", "ARTIST - TITLE", just "TITLE"
-    const lines = pageText.split(/\s{2,}|\n/).map(l => l.trim()).filter(Boolean);
-    if (!lines.length) return;
-
-    let title = '';
-    let artist = '';
-    let lyricsStart = 1;
-
-    const firstLine = lines[0].replace(/\(başa dön\)/gi, '').trim();
-    // Check for "(başa dön)" marker which appears in some songs
-    const hasDash = firstLine.includes('–') || firstLine.includes('-');
-
-    if (hasDash) {
-      const sep = firstLine.includes('–') ? '–' : '-';
-      const parts = firstLine.split(sep).map(p => p.trim());
-      if (parts.length >= 2) {
-        artist = parts[0];
-        title = parts.slice(1).join(' – ').trim();
-      } else {
-        title = firstLine;
-      }
-    } else {
-      title = firstLine;
-    }
-
-    // Clean up title
-    title = title.replace(/\(başa dön\)/gi, '').trim();
-    if (!title || title.length < 2) return;
-
-    const lyrics = lines.slice(lyricsStart).join('\n').replace(/\(başa dön\)/gi, '').trim();
-
-    songs.push({ title, artist, lyrics });
+function parseSongPages(pages){
+  const result=[];
+  pages.forEach(pageText=>{
+    if(!pageText||pageText.length<10)return;
+    const lines=pageText.split('\n').map(l=>l.trim()).filter(Boolean);
+    if(!lines.length)return;
+    // Skip index pages (lots of "1. AFFET" style lines)
+    const numberedLines=lines.filter(l=>/^\d+[\.\)]\s/.test(l)).length;
+    if(numberedLines>4)return;
+    if(lines.length<2)return;
+    let rawTitle=lines[0].replace(/\(başa dön\)/gi,'').trim();
+    let title='',artist='';
+    const dashMatch=rawTitle.match(/^(.+?)\s*[–\-]\s*(.+)$/);
+    if(dashMatch){artist=dashMatch[1].trim();title=dashMatch[2].trim();}
+    else{title=rawTitle;}
+    if(!title||title.length<2)return;
+    const lyrics=lines.slice(1).map(l=>l.replace(/\(başa dön\)/gi,'').trim()).filter(Boolean).join('\n').trim();
+    result.push({title,artist,lyrics,richHtml:null});
   });
-
-  return songs;
+  return result;
 }
 
-// ═══════════════════════════════
-// OCR IMAGE IMPORT
-// ═══════════════════════════════
-async function handleImageUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  input.value = '';
-
-  const progressWrap = document.getElementById('ocrProgress');
-  const progressFill = document.getElementById('ocrProgressFill');
-  const progressText = document.getElementById('ocrProgressText');
-
-  progressWrap.style.display = 'block';
-  progressFill.style.width = '10%';
-  progressText.textContent = 'OCR başlatılıyor… (bu biraz sürebilir)';
-
-  try {
-    const { data: { text } } = await Tesseract.recognize(file, 'tur+eng', {
-      logger: m => {
-        if (m.status === 'recognizing text') {
-          progressFill.style.width = (10 + m.progress * 80) + '%';
-          progressText.textContent = `Metin okunuyor… %${Math.round(m.progress*100)}`;
-        }
-      }
-    });
-
-    progressFill.style.width = '95%';
-    progressText.textContent = 'Şarkı oluşturuluyor…';
-
-    // For OCR, treat the whole result as one song
-    // Try to detect title from first non-empty line
-    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-    const title = lines[0] || 'İsimsiz Şarkı';
-    const lyrics = lines.slice(1).join('\n');
-
-    songs.push({ id: genId(), title, artist: '', lyrics });
-    saveData();
-    renderSongList();
-    progressFill.style.width = '100%';
-    progressText.textContent = 'Eklendi ✓ — Şarkıyı düzenleyerek başlığı düzeltebilirsin';
-    showToast(`"${title}" eklendi`);
-    setTimeout(() => { progressWrap.style.display = 'none'; }, 4000);
-
-  } catch(e) {
-    progressText.textContent = 'OCR hatası: ' + e.message;
-    console.error(e);
-  }
+// OCR
+async function handleImageUpload(input){
+  const file=input.files[0];if(!file)return;input.value='';
+  const pw=document.getElementById('ocrProgress'),pf=document.getElementById('ocrProgressFill'),pt=document.getElementById('ocrProgressText');
+  pw.style.display='block';pf.style.width='10%';pt.textContent='OCR başlatılıyor…';
+  try{
+    const{data:{text}}=await Tesseract.recognize(file,'tur+eng',{logger:m=>{if(m.status==='recognizing text'){pf.style.width=(10+m.progress*80)+'%';pt.textContent=`Metin okunuyor… %${Math.round(m.progress*100)}`;}}});
+    pf.style.width='95%';
+    const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
+    const title=lines[0]||'İsimsiz Şarkı';
+    const lyrics=lines.slice(1).join('\n');
+    const id=genId();songs.push({id,title,artist:'',lyrics,richHtml:null});
+    saveData();renderSongList();pf.style.width='100%';
+    pt.textContent='Eklendi ✓ — Şarkıya tıklayıp "Düzenle" ile düzeltebilirsin';
+    showToast(`"${title}" eklendi`);setTimeout(()=>{pw.style.display='none'},4000);
+  }catch(e){pt.textContent='OCR hatası: '+e.message}
 }
 
-// ═══════════════════════════════
-// MANUAL ADD
-// ═══════════════════════════════
-function addManualSong() {
-  const title = document.getElementById('manualTitle').value.trim();
-  const artist = document.getElementById('manualArtist').value.trim();
-  const lyrics = document.getElementById('manualLyrics').value;
-
-  if (!title) { showToast('Şarkı adı gerekli'); return; }
-
-  songs.push({ id: genId(), title, artist, lyrics });
-  saveData();
-  renderSongList();
-  document.getElementById('manualTitle').value = '';
-  document.getElementById('manualArtist').value = '';
-  document.getElementById('manualLyrics').value = '';
-  showToast(`"${title}" eklendi`);
+// MANUAL
+function addManualSongAndEdit(){
+  const title=document.getElementById('manualTitle').value.trim();
+  const artist=document.getElementById('manualArtist').value.trim();
+  if(!title){showToast('Şarkı adı gerekli');return;}
+  const id=genId();songs.push({id,title,artist,lyrics:'',richHtml:null});saveData();
+  document.getElementById('manualTitle').value='';document.getElementById('manualArtist').value='';
+  currentSongId=id;previousScreen='songsScreen';openEditor();showToast(`"${title}" oluşturuldu`);
 }
 
-// ═══════════════════════════════
-// UTILS
-// ═══════════════════════════════
-function escHtml(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ═══════════════════════════════
 // INIT
-// ═══════════════════════════════
-loadData();
-renderSongList();
-
-// Register SW
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+loadData();renderSongList();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
