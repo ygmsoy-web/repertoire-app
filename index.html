@@ -66,13 +66,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 /* SONG LIST — 3 column grid */
 .list-content.grid-view{padding:8px 8px 80px}
 .list-content.grid-view .alpha-header{margin:8px 0 4px;position:static;border-radius:6px}
-.list-content.grid-view .alpha-section-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
-.grid-song-btn{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;-webkit-appearance:none;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:70px;justify-content:center}
+.list-content.grid-view .alpha-section-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px}
+.grid-song-btn{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:8px;padding:8px 6px;text-align:center;cursor:pointer;-webkit-appearance:none;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:48px;justify-content:center}
 .grid-song-btn:active{background:var(--terracotta-pale)}
-.grid-icon{width:32px;height:32px;border-radius:8px;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--ink-mid);flex-shrink:0}
-.grid-icon.has-chords{background:var(--terracotta-pale);color:var(--terracotta)}
-.grid-song-name{font-family:'Lora',serif;font-size:11px;font-weight:500;color:var(--ink);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;width:100%}
-.grid-song-artist{font-size:10px;color:var(--ink-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.grid-song-name{font-family:'Lora',serif;font-size:11px;font-weight:500;color:var(--ink);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;width:100%;text-align:center}
+.grid-song-artist{font-size:10px;color:var(--ink-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center}
+.grid-chord-dot{width:5px;height:5px;border-radius:50%;background:var(--terracotta);margin-top:2px}
 
 /* SONG DETAIL */
 #songDetailScreen{background:var(--white)}
@@ -121,7 +120,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .tc-swatch:active{transform:scale(1.25)}
 .tc-swatch.selected{box-shadow:0 0 0 2.5px var(--terracotta)}
 
-.editor-content{flex:1;overflow-y:auto;padding:16px 20px 120px}
+.editor-content{flex:1;overflow-y:auto;padding:16px 20px 80px;padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 #richEditor{min-height:300px;outline:none;font-family:'Lora',serif;font-size:16px;line-height:1.85;color:var(--ink);word-break:break-word}
 #richEditor:empty:before{content:'Şarkı sözlerini buraya yaz…';color:var(--ink-faint);pointer-events:none}
 
@@ -610,9 +609,9 @@ function renderSongList(){
       groups[letter].forEach(song=>{
         const hc=detectChords(song.richHtml||song.lyrics||'');
         html+=`<button class="grid-song-btn" onclick="openSong('${song.id}')">
-          <div class="grid-icon ${hc?'has-chords':''}">${escHtml(song.title[0].toUpperCase())}</div>
           <div class="grid-song-name">${escHtml(song.title)}</div>
           ${song.artist?`<div class="grid-song-artist">${escHtml(song.artist)}</div>`:''}
+          ${hc?'<div class="grid-chord-dot"></div>':''}
         </button>`;
       });
       html+=`</div>`;
@@ -653,11 +652,14 @@ function openEditor(){
   document.getElementById('editorTitle').value=song.title;
   document.getElementById('editorArtist').value=song.artist||'';
   const ed=document.getElementById('richEditor');
-  if(song.richHtml)ed.innerHTML=song.richHtml;
-  else if(song.lyrics)ed.innerHTML=song.lyrics.split('\n').map(l=>`<div>${escHtml(l)||'<br>'}</div>`).join('');
-  else ed.innerHTML='';
+  ed.innerHTML='';
+  if(song.richHtml&&song.richHtml.trim()){ed.innerHTML=song.richHtml;}
+  else if(song.lyrics&&song.lyrics.trim()){ed.innerHTML=song.lyrics.split('\n').map(l=>`<div>${escHtml(l)||'<br>'}</div>`).join('');}
   showScreen('editorScreen');
-  setTimeout(()=>ed.focus(),300);
+  savedRange=null;
+  const ec=document.querySelector('.editor-content');
+  if(ec)ec.scrollTop=0;
+  setTimeout(()=>ed.focus(),350);
 }
 function closeEditor(){showScreen('songDetailScreen')}
 function saveFromEditor(){
