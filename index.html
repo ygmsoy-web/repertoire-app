@@ -11,181 +11,236 @@
 <title>Repertuvar</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #F5F0E8; --cream-dark: #EDE6D6; --terracotta: #C1440E;
-    --terracotta-pale: #F5DDD5; --ink: #1A1410; --ink-mid: #4A3F35;
-    --ink-light: #8A7A6E; --ink-faint: #C4B8AE; --chord: #1A5276; --white: #FEFCF8;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
-  .screen { display: none; min-height: 100vh; flex-direction: column; }
-  .screen.active { display: flex; }
+:root{
+  --cream:#F5F0E8;--cream-dark:#EDE6D6;--terracotta:#C1440E;
+  --terracotta-pale:#F5DDD5;--ink:#1A1410;--ink-mid:#4A3F35;
+  --ink-light:#8A7A6E;--ink-faint:#C4B8AE;--chord:#1A5276;--white:#FEFCF8;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
 
-  /* TOPBAR */
-  .topbar { background: var(--cream); border-bottom: 1.5px solid var(--ink-faint); padding: 0 16px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  .topbar-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; }
-  .topbar-subtitle { font-size: 11px; color: var(--ink-light); font-weight: 300; letter-spacing: 0.5px; text-transform: uppercase; }
-  .topbar-left { display: flex; flex-direction: column; gap: 1px; }
-  .icon-btn { width: 38px; height: 38px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--ink-mid); -webkit-appearance: none; }
-  .icon-btn:active { background: var(--cream-dark); }
-  .icon-btn svg { width: 22px; height: 22px; }
+/* TOPBAR */
+.topbar{background:var(--cream);border-bottom:1.5px solid var(--ink-faint);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700}
+.topbar-subtitle{font-size:11px;color:var(--ink-light);font-weight:300;letter-spacing:.5px;text-transform:uppercase}
+.topbar-left{display:flex;flex-direction:column;gap:1px}
+.topbar-right{display:flex;gap:2px;align-items:center}
+.icon-btn{width:38px;height:38px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--ink-mid);-webkit-appearance:none}
+.icon-btn:active{background:var(--cream-dark)}
+.icon-btn svg{width:22px;height:22px}
+.icon-btn.active-view{background:var(--terracotta-pale);color:var(--terracotta)}
 
-  /* BOTTOM NAV */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: var(--white); border-top: 1.5px solid var(--ink-faint); display: flex; z-index: 200; padding-bottom: env(safe-area-inset-bottom); }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: none; background: none; cursor: pointer; color: var(--ink-light); font-size: 10px; font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; -webkit-appearance: none; }
-  .nav-btn.active { color: var(--terracotta); }
-  .nav-btn svg { width: 22px; height: 22px; }
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--white);border-top:1.5px solid var(--ink-faint);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--ink-light);font-size:10px;font-weight:500;letter-spacing:.3px;text-transform:uppercase;-webkit-appearance:none}
+.nav-btn.active{color:var(--terracotta)}
+.nav-btn svg{width:22px;height:22px}
 
-  /* SEARCH */
-  .search-wrap { padding: 12px 16px 8px; }
-  .search-input-wrap { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1.5px solid var(--ink-faint); border-radius: 12px; padding: 0 14px; height: 44px; }
-  .search-input-wrap:focus-within { border-color: var(--terracotta); }
-  .search-input-wrap svg { color: var(--ink-light); width: 18px; height: 18px; flex-shrink: 0; }
-  #searchInput { flex: 1; border: none; background: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--ink); }
-  #searchInput::placeholder { color: var(--ink-faint); }
+/* SEARCH */
+.search-wrap{padding:12px 16px 8px}
+.search-input-wrap{display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--ink-faint);border-radius:12px;padding:0 14px;height:44px}
+.search-input-wrap:focus-within{border-color:var(--terracotta)}
+.search-input-wrap svg{color:var(--ink-light);width:18px;height:18px;flex-shrink:0}
+#searchInput{flex:1;border:none;background:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink)}
+#searchInput::placeholder{color:var(--ink-faint)}
 
-  /* SONG LIST */
-  .list-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
-  .alpha-header { padding: 10px 16px 4px; font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 600; color: var(--terracotta); letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--cream-dark); background: var(--cream); position: sticky; top: 0; }
-  .song-item { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--cream-dark); background: var(--cream); gap: 12px; border-left: none; border-right: none; border-top: none; width: 100%; text-align: left; cursor: pointer; -webkit-appearance: none; }
-  .song-item:active { background: var(--terracotta-pale); }
-  .song-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink-mid); }
-  .song-icon.has-chords { background: var(--terracotta-pale); color: var(--terracotta); }
-  .song-info { flex: 1; min-width: 0; }
-  .song-name { font-family: 'Lora', serif; font-size: 15px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .song-artist { font-size: 12px; color: var(--ink-light); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .song-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
-  .badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 20px; }
-  .badge-chord { background: #D6EAF8; color: var(--chord); }
-  .badge-playlist { background: var(--terracotta-pale); color: var(--terracotta); }
-  .song-arrow { color: var(--ink-faint); flex-shrink: 0; }
-  .song-arrow svg { width: 16px; height: 16px; }
+/* SONG LIST — single column */
+.list-content{flex:1;overflow-y:auto;padding-bottom:80px}
+.alpha-header{padding:10px 16px 4px;font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:var(--terracotta);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--cream-dark);background:var(--cream);position:sticky;top:0;z-index:10}
+.song-item{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--cream-dark);background:var(--cream);gap:12px;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;cursor:pointer;-webkit-appearance:none}
+.song-item:active{background:var(--terracotta-pale)}
+.song-icon{width:38px;height:38px;border-radius:10px;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink-mid)}
+.song-icon.has-chords{background:var(--terracotta-pale);color:var(--terracotta)}
+.song-info{flex:1;min-width:0}
+.song-name{font-family:'Lora',serif;font-size:15px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-artist{font-size:12px;color:var(--ink-light);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-badges{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px}
+.badge-chord{background:#D6EAF8;color:var(--chord)}
+.badge-playlist{background:var(--terracotta-pale);color:var(--terracotta)}
+.song-arrow{color:var(--ink-faint);flex-shrink:0}
+.song-arrow svg{width:16px;height:16px}
 
-  /* SONG DETAIL */
-  #songDetailScreen { background: var(--white); }
-  .song-detail-topbar { background: var(--white); border-bottom: 1.5px solid var(--cream-dark); padding: 0 16px; height: 56px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
-  .song-detail-header { padding: 24px 20px 16px; border-bottom: 1.5px solid var(--cream-dark); }
-  .detail-song-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 6px; }
-  .detail-artist { font-size: 14px; color: var(--terracotta); font-weight: 500; }
-  .detail-meta { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .detail-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-  .action-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--ink-faint); background: var(--cream); font-size: 13px; font-weight: 500; color: var(--ink-mid); cursor: pointer; font-family: 'DM Sans', sans-serif; -webkit-appearance: none; }
-  .action-btn:active { background: var(--cream-dark); }
-  .action-btn svg { width: 16px; height: 16px; }
-  .lyrics-container { padding: 20px; padding-bottom: 100px; }
-  .chord-line { font-family: 'DM Sans', monospace; font-size: 13px; font-weight: 600; color: var(--chord); line-height: 1.4; letter-spacing: 0.5px; white-space: pre-wrap; }
+/* SONG LIST — 3 column grid */
+.list-content.grid-view{padding:8px 8px 80px}
+.list-content.grid-view .alpha-header{margin:8px 0 4px;position:static;border-radius:6px}
+.list-content.grid-view .alpha-section-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.grid-song-btn{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;-webkit-appearance:none;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:70px;justify-content:center}
+.grid-song-btn:active{background:var(--terracotta-pale)}
+.grid-icon{width:32px;height:32px;border-radius:8px;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--ink-mid);flex-shrink:0}
+.grid-icon.has-chords{background:var(--terracotta-pale);color:var(--terracotta)}
+.grid-song-name{font-family:'Lora',serif;font-size:11px;font-weight:500;color:var(--ink);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;width:100%}
+.grid-song-artist{font-size:10px;color:var(--ink-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
 
-  /* RICH TEXT EDITOR */
-  #editorScreen { background: var(--white); }
-  .editor-topbar { background: var(--white); border-bottom: 1.5px solid var(--cream-dark); padding: 0 12px; height: 56px; display: flex; align-items: center; gap: 8px; position: sticky; top: 0; z-index: 100; }
-  .editor-title-input { flex: 1; border: none; background: none; outline: none; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--ink); }
-  .save-btn { padding: 7px 16px; background: var(--terracotta); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; -webkit-appearance: none; white-space: nowrap; }
-  .editor-artist-input { width: 100%; padding: 8px 16px; border: none; border-bottom: 1px solid var(--cream-dark); background: var(--cream); outline: none; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink-mid); }
-  .editor-artist-input::placeholder { color: var(--ink-faint); }
+/* SONG DETAIL */
+#songDetailScreen{background:var(--white)}
+.song-detail-topbar{background:var(--white);border-bottom:1.5px solid var(--cream-dark);padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.song-detail-header{padding:24px 20px 16px;border-bottom:1.5px solid var(--cream-dark)}
+.detail-song-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:6px}
+.detail-artist{font-size:14px;color:var(--terracotta);font-weight:500}
+.detail-meta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.detail-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.action-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--ink-faint);background:var(--cream);font-size:13px;font-weight:500;color:var(--ink-mid);cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.action-btn:active{background:var(--cream-dark)}
+.action-btn svg{width:16px;height:16px}
+.lyrics-container{padding:20px;padding-bottom:60px}
+.chord-line{font-family:'DM Sans',monospace;font-size:13px;font-weight:600;color:var(--chord);line-height:1.4;letter-spacing:.5px;white-space:pre-wrap}
 
-  /* FORMAT TOOLBAR */
-  .format-toolbar { display: flex; align-items: center; gap: 2px; padding: 6px 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; border-bottom: 1.5px solid var(--cream-dark); background: var(--cream); flex-shrink: 0; scrollbar-width: none; }
-  .format-toolbar::-webkit-scrollbar { display: none; }
-  .fmt-btn { min-width: 34px; height: 34px; border: 1px solid transparent; border-radius: 7px; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--ink-mid); font-family: 'DM Sans', sans-serif; flex-shrink: 0; padding: 0 8px; -webkit-appearance: none; }
-  .fmt-btn:active { background: var(--cream-dark); border-color: var(--ink-faint); }
-  .fmt-sep { width: 1px; height: 24px; background: var(--ink-faint); margin: 0 4px; flex-shrink: 0; }
-  .fmt-select { height: 32px; border: 1px solid var(--ink-faint); border-radius: 7px; background: var(--white); font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink-mid); padding: 0 6px; cursor: pointer; outline: none; flex-shrink: 0; }
+/* RICH TEXT EDITOR */
+#editorScreen{background:var(--white)}
+.editor-topbar{background:var(--white);border-bottom:1.5px solid var(--cream-dark);padding:0 12px;height:56px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:100}
+.editor-title-input{flex:1;border:none;background:none;outline:none;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink)}
+.save-btn{padding:7px 16px;background:var(--terracotta);color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none;white-space:nowrap}
+.editor-artist-input{width:100%;padding:8px 16px;border:none;border-bottom:1px solid var(--cream-dark);background:var(--cream);outline:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-mid)}
+.editor-artist-input::placeholder{color:var(--ink-faint)}
 
-  /* Color palette */
-  .color-palette { position: fixed; z-index: 500; background: var(--white); border: 1.5px solid var(--ink-faint); border-radius: 12px; padding: 10px; display: none; flex-wrap: wrap; gap: 8px; width: 204px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-  .color-palette.open { display: flex; }
-  .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 0 0 1px rgba(0,0,0,0.1); }
-  .color-swatch:active { transform: scale(1.2); }
+/* FORMAT TOOLBAR — fixed at BOTTOM */
+.format-toolbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  display:none;align-items:center;gap:2px;
+  padding:8px 10px;padding-bottom:calc(8px + env(safe-area-inset-bottom));
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border-top:1.5px solid var(--ink-faint);
+  background:var(--cream);
+  scrollbar-width:none;
+}
+.format-toolbar::-webkit-scrollbar{display:none}
+.format-toolbar.visible{display:flex}
+.fmt-btn{min-width:36px;height:36px;border:1px solid transparent;border-radius:8px;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--ink-mid);font-family:'DM Sans',sans-serif;flex-shrink:0;padding:0 8px;-webkit-appearance:none}
+.fmt-btn:active{background:var(--cream-dark);border-color:var(--ink-faint)}
+.fmt-sep{width:1px;height:24px;background:var(--ink-faint);margin:0 3px;flex-shrink:0}
 
-  .editor-content { flex: 1; overflow-y: auto; padding: 16px 20px 120px; }
-  #richEditor { min-height: 300px; outline: none; font-family: 'Lora', serif; font-size: 16px; line-height: 1.85; color: var(--ink); word-break: break-word; }
-  #richEditor:empty:before { content: 'Şarkı sözlerini buraya yaz…'; color: var(--ink-faint); pointer-events: none; }
+/* Punto select */
+.fmt-select{height:34px;border:1px solid var(--ink-faint);border-radius:8px;background:var(--white);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-mid);padding:0 6px;cursor:pointer;outline:none;flex-shrink:0}
 
-  /* PLAYLISTS */
-  .content-pad { padding: 16px; flex: 1; overflow-y: auto; padding-bottom: 80px; }
-  .playlist-card { background: var(--white); border: 1.5px solid var(--cream-dark); border-radius: 14px; padding: 16px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 14px; -webkit-appearance: none; width: 100%; text-align: left; border-left: 4px solid var(--terracotta); }
-  .playlist-card:active { opacity: 0.8; }
-  .playlist-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--terracotta-pale); display: flex; align-items: center; justify-content: center; color: var(--terracotta); flex-shrink: 0; }
-  .playlist-icon svg { width: 22px; height: 22px; }
-  .playlist-info { flex: 1; min-width: 0; }
-  .playlist-name { font-family: 'Lora', serif; font-size: 15px; font-weight: 500; color: var(--ink); }
-  .playlist-count { font-size: 12px; color: var(--ink-light); margin-top: 2px; }
-  .fab { position: fixed; bottom: 80px; right: 20px; width: 52px; height: 52px; background: var(--terracotta); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 16px rgba(193,68,14,0.35); z-index: 150; -webkit-appearance: none; }
-  .fab:active { transform: scale(0.94); }
-  .fab svg { width: 24px; height: 24px; color: white; }
+/* Color swatches inline in toolbar */
+.color-row{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.tc-swatch{width:22px;height:22px;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1.5px rgba(0,0,0,0.15);cursor:pointer;flex-shrink:0;-webkit-appearance:none}
+.tc-swatch:active{transform:scale(1.25)}
+.tc-swatch.selected{box-shadow:0 0 0 2.5px var(--terracotta)}
 
-  /* PLAYLIST DETAIL */
-  .playlist-song-item { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--cream-dark); gap: 12px; background: var(--white); }
-  .ps-num { width: 28px; height: 28px; border-radius: 50%; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--ink-mid); flex-shrink: 0; }
-  .ps-info { flex: 1; min-width: 0; cursor: pointer; }
-  .ps-name { font-family: 'Lora', serif; font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ps-artist { font-size: 11px; color: var(--ink-light); margin-top: 1px; }
-  .ps-remove { width: 32px; height: 32px; border-radius: 50%; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-faint); -webkit-appearance: none; }
-  .ps-remove:active { color: var(--terracotta); }
-  .ps-remove svg { width: 18px; height: 18px; }
+.editor-content{flex:1;overflow-y:auto;padding:16px 20px 120px}
+#richEditor{min-height:300px;outline:none;font-family:'Lora',serif;font-size:16px;line-height:1.85;color:var(--ink);word-break:break-word}
+#richEditor:empty:before{content:'Şarkı sözlerini buraya yaz…';color:var(--ink-faint);pointer-events:none}
 
-  /* IMPORT */
-  .import-section { background: var(--white); border: 1.5px solid var(--cream-dark); border-radius: 14px; overflow: hidden; margin-bottom: 14px; }
-  .import-section-header { padding: 14px 16px; font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--ink); border-bottom: 1px solid var(--cream-dark); background: var(--cream); }
-  .import-section-body { padding: 16px; }
-  .upload-zone { border: 2px dashed var(--ink-faint); border-radius: 10px; padding: 24px 16px; text-align: center; cursor: pointer; }
-  .upload-zone:active { border-color: var(--terracotta); background: var(--terracotta-pale); }
-  .upload-zone svg { width: 32px; height: 32px; color: var(--ink-light); margin-bottom: 8px; }
-  .upload-zone-text { font-size: 14px; color: var(--ink-mid); font-weight: 500; }
-  .upload-zone-sub { font-size: 12px; color: var(--ink-light); margin-top: 4px; }
-  .file-input { display: none; }
-  .import-btn { width: 100%; padding: 13px; background: var(--terracotta); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; -webkit-appearance: none; }
-  .import-btn svg { width: 18px; height: 18px; }
-  .progress-wrap { margin-top: 12px; display: none; }
-  .progress-bar { height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--terracotta); border-radius: 3px; transition: width 0.3s; width: 0%; }
-  .progress-text { font-size: 12px; color: var(--ink-light); margin-top: 6px; text-align: center; }
-  .form-input { padding: 11px 14px; border: 1.5px solid var(--ink-faint); border-radius: 10px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--cream); outline: none; width: 100%; -webkit-appearance: none; }
-  .form-input:focus { border-color: var(--terracotta); }
-  .form-label { font-size: 12px; font-weight: 500; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .manual-add-form { display: flex; flex-direction: column; gap: 10px; }
+/* PLAYLISTS */
+.content-pad{padding:16px;flex:1;overflow-y:auto;padding-bottom:80px}
+.playlist-card{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;-webkit-appearance:none;width:100%;text-align:left;border-left:4px solid var(--terracotta)}
+.playlist-card:active{opacity:.8}
+.playlist-icon{width:44px;height:44px;border-radius:10px;background:var(--terracotta-pale);display:flex;align-items:center;justify-content:center;color:var(--terracotta);flex-shrink:0}
+.playlist-icon svg{width:22px;height:22px}
+.playlist-info{flex:1;min-width:0}
+.playlist-name{font-family:'Lora',serif;font-size:15px;font-weight:500;color:var(--ink)}
+.playlist-count{font-size:12px;color:var(--ink-light);margin-top:2px}
+.fab{position:fixed;bottom:80px;right:20px;width:52px;height:52px;background:var(--terracotta);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(193,68,14,.35);z-index:150;-webkit-appearance:none}
+.fab:active{transform:scale(.94)}
+.fab svg{width:24px;height:24px;color:white}
 
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(26,20,16,0.5); z-index: 1000; display: none; align-items: flex-end; backdrop-filter: blur(2px); }
-  .modal-overlay.open { display: flex; }
-  .modal-sheet { background: var(--white); border-radius: 20px 20px 0 0; width: 100%; max-height: 80vh; animation: slideUp 0.25s ease; display: flex; flex-direction: column; }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-handle { width: 36px; height: 4px; background: var(--ink-faint); border-radius: 2px; margin: 12px auto 8px; }
-  .modal-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; padding: 8px 20px 16px; color: var(--ink); border-bottom: 1px solid var(--cream-dark); }
-  .modal-content { padding: 16px 20px; overflow-y: auto; flex: 1; }
-  .modal-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--ink-faint); border-radius: 10px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--cream); outline: none; margin-bottom: 12px; -webkit-appearance: none; }
-  .modal-playlist-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--cream-dark); gap: 12px; cursor: pointer; }
-  .modal-playlist-item:last-child { border-bottom: none; }
-  .check-circle { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--ink-faint); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .check-circle.checked { background: var(--terracotta); border-color: var(--terracotta); }
-  .check-circle.checked::after { content: ''; width: 6px; height: 10px; border-right: 2px solid white; border-bottom: 2px solid white; transform: rotate(45deg) translate(-1px,-1px); display: block; }
-  .modal-pl-name { font-family: 'Lora', serif; font-size: 15px; color: var(--ink); }
-  .modal-pl-count { font-size: 12px; color: var(--ink-light); margin-top: 1px; }
-  .modal-actions { padding: 12px 20px 16px; border-top: 1px solid var(--cream-dark); display: flex; gap: 10px; }
-  .modal-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--ink-faint); background: var(--cream); color: var(--ink-mid); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; -webkit-appearance: none; }
-  .modal-btn.primary { background: var(--terracotta); border-color: var(--terracotta); color: white; }
+/* PLAYLIST DETAIL */
+.playlist-song-item{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--cream-dark);gap:10px;background:var(--white);touch-action:none}
+.ps-num{width:28px;height:28px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--ink-mid);flex-shrink:0}
+.ps-info{flex:1;min-width:0;cursor:pointer}
+.ps-name{font-family:'Lora',serif;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ps-artist{font-size:11px;color:var(--ink-light);margin-top:1px}
+.ps-drag{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);cursor:grab;flex-shrink:0}
+.ps-drag svg{width:18px;height:18px}
+.ps-remove{width:32px;height:32px;border-radius:50%;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);-webkit-appearance:none}
+.ps-remove:active{color:var(--terracotta)}
+.ps-remove svg{width:18px;height:18px}
+.drag-over{background:var(--terracotta-pale)!important;border-top:2px solid var(--terracotta)}
 
-  /* EMPTY + TOAST */
-  .empty-state { display: flex; flex-direction: column; align-items: center; padding: 60px 32px; text-align: center; color: var(--ink-light); }
-  .empty-state svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.4; }
-  .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink-mid); margin-bottom: 8px; }
-  .empty-state p { font-size: 14px; line-height: 1.6; }
-  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--cream); padding: 10px 20px; border-radius: 20px; font-size: 14px; opacity: 0; transition: all 0.25s; z-index: 2000; white-space: nowrap; pointer-events: none; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* IMPORT */
+.import-section{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.import-section-header{padding:14px 16px;font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);border-bottom:1px solid var(--cream-dark);background:var(--cream)}
+.import-section-body{padding:16px}
+.upload-zone{border:2px dashed var(--ink-faint);border-radius:10px;padding:24px 16px;text-align:center;cursor:pointer}
+.upload-zone:active{border-color:var(--terracotta);background:var(--terracotta-pale)}
+.upload-zone svg{width:32px;height:32px;color:var(--ink-light);margin-bottom:8px}
+.upload-zone-text{font-size:14px;color:var(--ink-mid);font-weight:500}
+.upload-zone-sub{font-size:12px;color:var(--ink-light);margin-top:4px}
+.file-input{display:none}
+.import-btn{width:100%;padding:13px;background:var(--terracotta);color:white;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none}
+.import-btn svg{width:18px;height:18px}
+.progress-wrap{margin-top:12px;display:none}
+.progress-bar{height:6px;background:var(--cream-dark);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--terracotta);border-radius:3px;transition:width .3s;width:0%}
+.progress-text{font-size:12px;color:var(--ink-light);margin-top:6px;text-align:center}
+.form-input{padding:11px 14px;border:1.5px solid var(--ink-faint);border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--cream);outline:none;width:100%;-webkit-appearance:none}
+.form-input:focus{border-color:var(--terracotta)}
+.form-label{font-size:12px;font-weight:500;color:var(--ink-light);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.manual-add-form{display:flex;flex-direction:column;gap:10px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,20,16,.5);z-index:1000;display:none;align-items:flex-end;backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--white);border-radius:20px 20px 0 0;width:100%;max-height:88vh;animation:slideUp .25s ease;display:flex;flex-direction:column}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--ink-faint);border-radius:2px;margin:12px auto 8px}
+.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;padding:8px 20px 12px;color:var(--ink);border-bottom:1px solid var(--cream-dark)}
+.modal-content{padding:12px 20px;overflow-y:auto;flex:1}
+.modal-input{width:100%;padding:11px 14px;border:1.5px solid var(--ink-faint);border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--cream);outline:none;margin-bottom:12px;-webkit-appearance:none}
+.modal-input:focus{border-color:var(--terracotta)}
+
+/* Song picker in playlist modal */
+.song-search-wrap{display:flex;align-items:center;gap:8px;background:var(--cream);border:1.5px solid var(--ink-faint);border-radius:10px;padding:0 12px;height:40px;margin-bottom:10px}
+.song-search-wrap:focus-within{border-color:var(--terracotta)}
+.song-search-wrap svg{width:16px;height:16px;color:var(--ink-light);flex-shrink:0}
+.song-search-input{flex:1;border:none;background:none;outline:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)}
+.song-search-input::placeholder{color:var(--ink-faint)}
+
+.picker-song-item{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--cream-dark);gap:10px;cursor:pointer}
+.picker-song-item:last-child{border-bottom:none}
+.picker-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink-faint);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.picker-check.checked{background:var(--terracotta);border-color:var(--terracotta)}
+.picker-check.checked::after{content:'';width:6px;height:10px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(45deg) translate(-1px,-1px);display:block}
+.picker-name{font-family:'Lora',serif;font-size:14px;color:var(--ink);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.picker-artist{font-size:11px;color:var(--ink-light)}
+
+.modal-playlist-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid var(--cream-dark);gap:12px;cursor:pointer}
+.modal-playlist-item:last-child{border-bottom:none}
+.check-circle{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink-faint);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.check-circle.checked{background:var(--terracotta);border-color:var(--terracotta)}
+.check-circle.checked::after{content:'';width:6px;height:10px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(45deg) translate(-1px,-1px);display:block}
+.modal-pl-name{font-family:'Lora',serif;font-size:15px;color:var(--ink)}
+.modal-pl-count{font-size:12px;color:var(--ink-light);margin-top:1px}
+.modal-actions{padding:12px 20px 16px;border-top:1px solid var(--cream-dark);display:flex;gap:10px}
+.modal-btn{flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--ink-faint);background:var(--cream);color:var(--ink-mid);font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.modal-btn.primary{background:var(--terracotta);border-color:var(--terracotta);color:white}
+.modal-tabs{display:flex;border-bottom:1.5px solid var(--cream-dark);margin:0 -20px;padding:0 20px}
+.modal-tab{flex:1;padding:10px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--ink-light);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px}
+.modal-tab.active{color:var(--terracotta);border-bottom-color:var(--terracotta)}
+
+/* EMPTY + TOAST */
+.empty-state{display:flex;flex-direction:column;align-items:center;padding:60px 32px;text-align:center;color:var(--ink-light)}
+.empty-state svg{width:48px;height:48px;margin-bottom:16px;opacity:.4}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink-mid);margin-bottom:8px}
+.empty-state p{font-size:14px;line-height:1.6}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--cream);padding:10px 20px;border-radius:20px;font-size:14px;opacity:0;transition:all .25s;z-index:2000;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
-<!-- SONGS LIST -->
+<!-- ═══ SONGS LIST ═══ -->
 <div id="songsScreen" class="screen active">
   <div class="topbar">
     <div class="topbar-left">
       <div class="topbar-title">Repertuvar</div>
       <div class="topbar-subtitle" id="songCountLabel">0 şarkı</div>
     </div>
-    <button class="icon-btn" onclick="goToImport()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </button>
+    <div class="topbar-right">
+      <button class="icon-btn" id="viewListBtn" onclick="setView('list')" title="Liste görünümü">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </button>
+      <button class="icon-btn" id="viewGridBtn" onclick="setView('grid')" title="Izgara görünümü">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </button>
+      <button class="icon-btn" onclick="goToImport()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
   </div>
   <div class="search-wrap">
     <div class="search-input-wrap">
@@ -193,15 +248,10 @@
       <input type="search" id="searchInput" placeholder="Şarkı veya sanatçı ara…" oninput="renderSongList()">
     </div>
   </div>
-  <div class="list-content" id="songListContainer">
-    <div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      <h3>Henüz şarkı yok</h3><p>PDF, Word veya fotoğraf yükleyerek şarkılarını ekle</p>
-    </div>
-  </div>
+  <div class="list-content" id="songListContainer"></div>
 </div>
 
-<!-- SONG DETAIL -->
+<!-- ═══ SONG DETAIL ═══ -->
 <div id="songDetailScreen" class="screen">
   <div class="song-detail-topbar">
     <button class="icon-btn" onclick="goBack()">
@@ -232,7 +282,7 @@
   </div>
 </div>
 
-<!-- RICH TEXT EDITOR -->
+<!-- ═══ RICH TEXT EDITOR ═══ -->
 <div id="editorScreen" class="screen">
   <div class="editor-topbar">
     <button class="icon-btn" onclick="closeEditor()">
@@ -242,56 +292,59 @@
     <button class="save-btn" onclick="saveFromEditor()">Kaydet</button>
   </div>
   <input type="text" class="editor-artist-input" id="editorArtist" placeholder="Sanatçı adı…">
-  <div class="format-toolbar">
-    <button class="fmt-btn" onclick="fmt('bold')"><b>B</b></button>
-    <button class="fmt-btn" onclick="fmt('italic')"><i style="font-family:serif">I</i></button>
-    <button class="fmt-btn" onclick="fmt('underline')"><u>U</u></button>
-    <div class="fmt-sep"></div>
-    <select class="fmt-select" onchange="fmtSize(this.value)">
-      <option value="">Boyut</option>
-      <option value="12px">Küçük</option>
-      <option value="16px">Normal</option>
-      <option value="20px">Büyük</option>
-      <option value="24px">Çok büyük</option>
-    </select>
-    <div class="fmt-sep"></div>
-    <button class="fmt-btn" onclick="togglePalette('text')" style="gap:3px;font-size:12px">
-      🖊 <div id="textColorDot" style="width:10px;height:10px;border-radius:50%;background:#1A1410;border:1px solid #ccc;flex-shrink:0"></div>
-    </button>
-    <button class="fmt-btn" onclick="togglePalette('hi')" style="gap:3px;font-size:12px">
-      🖍 <div id="hlColorDot" style="width:10px;height:10px;border-radius:50%;background:#FFE066;border:1px solid #ccc;flex-shrink:0"></div>
-    </button>
-    <div class="fmt-sep"></div>
-    <button class="fmt-btn" onclick="applyChordStyle()" style="color:var(--chord);font-size:12px;font-weight:800">Am</button>
-    <div class="fmt-sep"></div>
-    <button class="fmt-btn" onclick="fmt('removeFormat')" style="font-size:11px;color:var(--ink-light)">✕ Temizle</button>
-  </div>
-  <!-- Color palettes -->
-  <div class="color-palette" id="textPal">
-    <div class="color-swatch" style="background:#1A1410" onclick="applyCol('#1A1410','text')"></div>
-    <div class="color-swatch" style="background:#C1440E" onclick="applyCol('#C1440E','text')"></div>
-    <div class="color-swatch" style="background:#1A5276" onclick="applyCol('#1A5276','text')"></div>
-    <div class="color-swatch" style="background:#2E7D4F" onclick="applyCol('#2E7D4F','text')"></div>
-    <div class="color-swatch" style="background:#7D3C98" onclick="applyCol('#7D3C98','text')"></div>
-    <div class="color-swatch" style="background:#8A7A6E" onclick="applyCol('#8A7A6E','text')"></div>
-    <div class="color-swatch" style="background:#C0392B" onclick="applyCol('#C0392B','text')"></div>
-    <div class="color-swatch" style="background:#117A65" onclick="applyCol('#117A65','text')"></div>
-  </div>
-  <div class="color-palette" id="hiPal">
-    <div class="color-swatch" style="background:#FFE066" onclick="applyCol('#FFE066','hi')"></div>
-    <div class="color-swatch" style="background:#ABEBC6" onclick="applyCol('#ABEBC6','hi')"></div>
-    <div class="color-swatch" style="background:#AED6F1" onclick="applyCol('#AED6F1','hi')"></div>
-    <div class="color-swatch" style="background:#F9E4B7" onclick="applyCol('#F9E4B7','hi')"></div>
-    <div class="color-swatch" style="background:#FADBD8" onclick="applyCol('#FADBD8','hi')"></div>
-    <div class="color-swatch" style="background:#E8DAEF" onclick="applyCol('#E8DAEF','hi')"></div>
-    <div class="color-swatch" style="background:transparent;border:2px dashed #ccc" onclick="applyCol('transparent','hi')"></div>
-  </div>
   <div class="editor-content">
     <div id="richEditor" contenteditable="true" spellcheck="false"></div>
   </div>
+
+  <!-- FORMAT TOOLBAR — fixed at bottom -->
+  <div class="format-toolbar visible" id="formatToolbar">
+    <!-- Bold / Italic / Underline -->
+    <button class="fmt-btn" onmousedown="e=>{e.preventDefault()}" onclick="fmtCmd('bold')"><b>B</b></button>
+    <button class="fmt-btn" onclick="fmtCmd('italic')"><i style="font-family:serif">İ</i></button>
+    <button class="fmt-btn" onclick="fmtCmd('underline')"><u>A</u></button>
+    <div class="fmt-sep"></div>
+    <!-- Punto -->
+    <select class="fmt-select" id="puntoSelect" onchange="applyPunto(this.value)">
+      <option value="">Punto</option>
+      <option value="8">8</option>
+      <option value="10">10</option>
+      <option value="12">12</option>
+      <option value="14">14</option>
+      <option value="16">16</option>
+      <option value="18">18</option>
+      <option value="20">20</option>
+      <option value="24">24</option>
+      <option value="28">28</option>
+    </select>
+    <div class="fmt-sep"></div>
+    <!-- Text colors -->
+    <div class="color-row">
+      <button class="tc-swatch" style="background:#1A1410" onclick="applyTextColor('#1A1410')" title="Siyah"></button>
+      <button class="tc-swatch" style="background:#C1440E" onclick="applyTextColor('#C1440E')" title="Terracotta"></button>
+      <button class="tc-swatch" style="background:#1A5276" onclick="applyTextColor('#1A5276')" title="Mavi"></button>
+      <button class="tc-swatch" style="background:#2E7D4F" onclick="applyTextColor('#2E7D4F')" title="Yeşil"></button>
+      <button class="tc-swatch" style="background:#7D3C98" onclick="applyTextColor('#7D3C98')" title="Mor"></button>
+      <button class="tc-swatch" style="background:#C0392B" onclick="applyTextColor('#C0392B')" title="Kırmızı"></button>
+    </div>
+    <div class="fmt-sep"></div>
+    <!-- Highlight colors -->
+    <div class="color-row">
+      <button class="tc-swatch" style="background:#FFE066" onclick="applyHighlight('#FFE066')" title="Sarı vurgu"></button>
+      <button class="tc-swatch" style="background:#ABEBC6" onclick="applyHighlight('#ABEBC6')" title="Yeşil vurgu"></button>
+      <button class="tc-swatch" style="background:#AED6F1" onclick="applyHighlight('#AED6F1')" title="Mavi vurgu"></button>
+      <button class="tc-swatch" style="background:#FADBD8" onclick="applyHighlight('#FADBD8')" title="Pembe vurgu"></button>
+      <button class="tc-swatch" style="background:#F5F5F5;border:1px dashed #aaa" onclick="applyHighlight('transparent')" title="Vurgu kaldır">✕</button>
+    </div>
+    <div class="fmt-sep"></div>
+    <!-- Chord style -->
+    <button class="fmt-btn" onclick="applyChordStyle()" style="color:var(--chord);font-weight:800;font-size:12px">Am</button>
+    <div class="fmt-sep"></div>
+    <!-- Clear -->
+    <button class="fmt-btn" onclick="fmtCmd('removeFormat')" style="font-size:11px;color:var(--ink-light)">✕</button>
+  </div>
 </div>
 
-<!-- PLAYLISTS -->
+<!-- ═══ PLAYLISTS ═══ -->
 <div id="playlistsScreen" class="screen">
   <div class="topbar">
     <div class="topbar-left">
@@ -305,7 +358,7 @@
   </button>
 </div>
 
-<!-- PLAYLIST DETAIL -->
+<!-- ═══ PLAYLIST DETAIL ═══ -->
 <div id="playlistDetailScreen" class="screen">
   <div class="topbar">
     <div class="topbar-left">
@@ -313,6 +366,9 @@
       <div class="topbar-subtitle" id="plDetailSubtitle"></div>
     </div>
     <div style="display:flex;gap:4px">
+      <button class="icon-btn" onclick="openAddSongsToPlaylist()" title="Şarkı ekle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
       <button class="icon-btn" onclick="renameCurrentPlaylist()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </button>
@@ -324,7 +380,7 @@
   <div style="flex:1;overflow-y:auto;padding-bottom:20px"><div id="plDetailSongList"></div></div>
 </div>
 
-<!-- IMPORT -->
+<!-- ═══ IMPORT ═══ -->
 <div id="importScreen" class="screen">
   <div class="topbar">
     <div class="topbar-left"><div class="topbar-title">Şarkı Ekle</div></div>
@@ -349,7 +405,7 @@
       </div>
     </div>
     <div class="import-section">
-      <div class="import-section-header">📷 Fotoğraf / Ekran Görüntüsü (OCR)</div>
+      <div class="import-section-header">📷 Fotoğraf / OCR</div>
       <div class="import-section-body">
         <div class="upload-zone" onclick="document.getElementById('imageInput').click()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -392,6 +448,7 @@
 </nav>
 
 <!-- MODALS -->
+<!-- Add to playlist (from song detail) -->
 <div class="modal-overlay" id="addToPlaylistModal" onclick="closeModalIfBg(event,'addToPlaylistModal')">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -403,17 +460,42 @@
     </div>
   </div>
 </div>
+
+<!-- New playlist -->
 <div class="modal-overlay" id="newPlaylistModal" onclick="closeModalIfBg(event,'newPlaylistModal')">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">Yeni Playlist</div>
-    <div class="modal-content"><input type="text" class="modal-input" id="newPlaylistName" placeholder="Playlist adı…"></div>
+    <div class="modal-content">
+      <input type="text" class="modal-input" id="newPlaylistName" placeholder="Playlist adı…">
+    </div>
     <div class="modal-actions">
       <button class="modal-btn" onclick="closeModal('newPlaylistModal')">Vazgeç</button>
       <button class="modal-btn primary" onclick="createPlaylist()">Oluştur</button>
     </div>
   </div>
 </div>
+
+<!-- Add songs to playlist (from playlist detail) -->
+<div class="modal-overlay" id="addSongsModal" onclick="closeModalIfBg(event,'addSongsModal')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="addSongsTitle">Şarkı Ekle</div>
+    <div class="modal-content">
+      <div class="song-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" class="song-search-input" id="pickerSearch" placeholder="Şarkı ara…" oninput="renderPicker()">
+      </div>
+      <div id="songPickerList"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeModal('addSongsModal')">Vazgeç</button>
+      <button class="modal-btn primary" onclick="savePickerSongs()">Ekle</button>
+    </div>
+  </div>
+</div>
+
+<!-- Song options -->
 <div class="modal-overlay" id="songOptionsModal" onclick="closeModalIfBg(event,'songOptionsModal')">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -437,7 +519,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
 <script>
+// ═══ DATA ═══
 let songs=[], playlists=[], currentSongId=null, currentPlaylistId=null, previousScreen='songsScreen';
+let currentView = localStorage.getItem('rep_view') || 'list';
 const SK='rep_songs_v4', PK='rep_playlists_v2';
 
 function loadData(){try{const s=localStorage.getItem(SK),p=localStorage.getItem(PK);songs=s?JSON.parse(s):[];playlists=p?JSON.parse(p):[]}catch(e){songs=[];playlists=[]}}
@@ -446,13 +530,14 @@ function genId(){return Date.now().toString(36)+Math.random().toString(36).slice
 function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
 
-// SCREENS
+// ═══ SCREENS ═══
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const noNav=['songDetailScreen','importScreen','editorScreen'];
   document.getElementById('bottomNav').style.display=noNav.includes(id)?'none':'flex';
-  closePalettes();
+  // Hide format toolbar when not in editor
+  document.getElementById('formatToolbar').classList.toggle('visible', id==='editorScreen');
 }
 function switchTab(tab){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -467,38 +552,78 @@ function goBack(){
 function goToImport(){previousScreen='songsScreen';showScreen('importScreen')}
 function goToPlaylists(){showScreen('playlistsScreen');renderPlaylists();document.getElementById('navPlaylists').classList.add('active');document.getElementById('navSongs').classList.remove('active')}
 
-// SONG LIST
+// ═══ VIEW TOGGLE ═══
+function setView(v){
+  currentView=v;
+  localStorage.setItem('rep_view',v);
+  document.getElementById('viewListBtn').classList.toggle('active-view', v==='list');
+  document.getElementById('viewGridBtn').classList.toggle('active-view', v==='grid');
+  renderSongList();
+}
+
+// ═══ SONG LIST ═══
 function renderSongList(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase();
   const filtered=songs.filter(s=>s.title.toLowerCase().includes(q)||(s.artist||'').toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title,'tr'));
   document.getElementById('songCountLabel').textContent=`${songs.length} şarkı`;
+  // Sync view buttons
+  document.getElementById('viewListBtn').classList.toggle('active-view', currentView==='list');
+  document.getElementById('viewGridBtn').classList.toggle('active-view', currentView==='grid');
+
   const container=document.getElementById('songListContainer');
-  if(!filtered.length){container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><h3>${q?'Sonuç yok':'Henüz şarkı yok'}</h3><p>${q?'"'+q+'" için sonuç bulunamadı':'PDF, Word veya fotoğraf yükleyerek şarkılarını ekle'}</p></div>`;return;}
+  if(!filtered.length){
+    container.className='list-content';
+    container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><h3>${q?'Sonuç yok':'Henüz şarkı yok'}</h3><p>${q?'"'+q+'" için sonuç bulunamadı':'PDF, Word veya fotoğraf yükleyerek şarkılarını ekle'}</p></div>`;
+    return;
+  }
+
   const groups={};
   filtered.forEach(s=>{const l=s.title[0].toUpperCase();if(!groups[l])groups[l]=[];groups[l].push(s)});
-  let html='';
-  Object.keys(groups).sort((a,b)=>a.localeCompare(b,'tr')).forEach(letter=>{
-    html+=`<div><div class="alpha-header">${letter}</div>`;
-    groups[letter].forEach(song=>{
-      const hc=detectChords(song.richHtml||song.lyrics||'');
-      const inPl=playlists.filter(p=>p.songs.includes(song.id));
-      html+=`<button class="song-item" onclick="openSong('${song.id}')">
-        <div class="song-icon ${hc?'has-chords':''}">${song.title[0].toUpperCase()}</div>
-        <div class="song-info">
-          <div class="song-name">${escHtml(song.title)}</div>
-          ${song.artist?`<div class="song-artist">${escHtml(song.artist)}</div>`:''}
-          <div class="song-badges">${hc?'<span class="badge badge-chord">Akordlu</span>':''}${inPl.map(p=>`<span class="badge badge-playlist">${escHtml(p.name)}</span>`).join('')}</div>
-        </div>
-        <div class="song-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
-      </button>`;
+  const sortedLetters=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'tr'));
+
+  if(currentView==='list'){
+    container.className='list-content';
+    let html='';
+    sortedLetters.forEach(letter=>{
+      html+=`<div><div class="alpha-header">${letter}</div>`;
+      groups[letter].forEach(song=>{
+        const hc=detectChords(song.richHtml||song.lyrics||'');
+        const inPl=playlists.filter(p=>p.songs.includes(song.id));
+        html+=`<button class="song-item" onclick="openSong('${song.id}')">
+          <div class="song-icon ${hc?'has-chords':''}">${escHtml(song.title[0].toUpperCase())}</div>
+          <div class="song-info">
+            <div class="song-name">${escHtml(song.title)}</div>
+            ${song.artist?`<div class="song-artist">${escHtml(song.artist)}</div>`:''}
+            <div class="song-badges">${hc?'<span class="badge badge-chord">Akordlu</span>':''}${inPl.map(p=>`<span class="badge badge-playlist">${escHtml(p.name)}</span>`).join('')}</div>
+          </div>
+          <div class="song-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </button>`;
+      });
+      html+=`</div>`;
     });
-    html+=`</div>`;
-  });
-  container.innerHTML=html;
+    container.innerHTML=html;
+  } else {
+    container.className='list-content grid-view';
+    let html='';
+    sortedLetters.forEach(letter=>{
+      html+=`<div class="alpha-header">${letter}</div><div class="alpha-section-inner">`;
+      groups[letter].forEach(song=>{
+        const hc=detectChords(song.richHtml||song.lyrics||'');
+        html+=`<button class="grid-song-btn" onclick="openSong('${song.id}')">
+          <div class="grid-icon ${hc?'has-chords':''}">${escHtml(song.title[0].toUpperCase())}</div>
+          <div class="grid-song-name">${escHtml(song.title)}</div>
+          ${song.artist?`<div class="grid-song-artist">${escHtml(song.artist)}</div>`:''}
+        </button>`;
+      });
+      html+=`</div>`;
+    });
+    container.innerHTML=html;
+  }
 }
+
 function detectChords(t){return /\b[A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?\b/.test((t||'').replace(/<[^>]*>/g,''))}
 
-// SONG DETAIL
+// ═══ SONG DETAIL ═══
 function openSong(id,fromPlaylist){
   const song=songs.find(s=>s.id===id);if(!song)return;
   currentSongId=id;
@@ -513,7 +638,6 @@ function openSong(id,fromPlaylist){
   else{el.innerHTML=renderPlain(song.lyrics||'');el.style.cssText='';}
   showScreen('songDetailScreen');
 }
-
 function renderPlain(text){
   if(!text)return'<span style="color:var(--ink-light);font-style:italic">Söz yok</span>';
   const cr=/^[\s]*([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?(?:\/[A-G][#b]?)?[\s]*){1,}[\s]*$/;
@@ -523,15 +647,15 @@ function renderPlain(text){
   }).join('');
 }
 
-// EDITOR
+// ═══ EDITOR ═══
 function openEditor(){
   const song=songs.find(s=>s.id===currentSongId);if(!song)return;
   document.getElementById('editorTitle').value=song.title;
   document.getElementById('editorArtist').value=song.artist||'';
   const ed=document.getElementById('richEditor');
-  if(song.richHtml){ed.innerHTML=song.richHtml;}
-  else if(song.lyrics){ed.innerHTML=song.lyrics.split('\n').map(l=>`<div>${escHtml(l)||'<br>'}</div>`).join('');}
-  else{ed.innerHTML='';}
+  if(song.richHtml)ed.innerHTML=song.richHtml;
+  else if(song.lyrics)ed.innerHTML=song.lyrics.split('\n').map(l=>`<div>${escHtml(l)||'<br>'}</div>`).join('');
+  else ed.innerHTML='';
   showScreen('editorScreen');
   setTimeout(()=>ed.focus(),300);
 }
@@ -547,44 +671,101 @@ function saveFromEditor(){
   openSong(currentSongId,previousScreen==='playlistDetailScreen');
 }
 
-// FORMAT
-function fmt(cmd){document.getElementById('richEditor').focus();document.execCommand(cmd,false,null)}
-function fmtSize(size){
-  if(!size)return;
-  const ed=document.getElementById('richEditor');ed.focus();
+// ═══ FORMAT COMMANDS ═══
+// Save & restore selection for mobile (toolbar taps lose focus)
+let savedRange=null;
+function saveSelection(){
   const sel=window.getSelection();
-  if(sel&&sel.rangeCount>0&&!sel.isCollapsed){
-    const range=sel.getRangeAt(0);
-    const span=document.createElement('span');span.style.fontSize=size;
-    try{range.surroundContents(span);}catch(e){document.execCommand('fontSize',false,'3');ed.querySelectorAll('font[size="3"]').forEach(f=>{f.removeAttribute('size');f.style.fontSize=size;});}
+  if(sel&&sel.rangeCount>0)savedRange=sel.getRangeAt(0).cloneRange();
+}
+function restoreSelection(){
+  const ed=document.getElementById('richEditor');
+  ed.focus();
+  if(savedRange){
+    const sel=window.getSelection();sel.removeAllRanges();sel.addRange(savedRange);
   }
 }
+document.getElementById('richEditor').addEventListener('mouseup',saveSelection);
+document.getElementById('richEditor').addEventListener('keyup',saveSelection);
+document.getElementById('richEditor').addEventListener('touchend',saveSelection);
+
+function fmtCmd(cmd){
+  restoreSelection();
+  document.execCommand(cmd,false,null);
+  saveSelection();
+}
+
+function applyPunto(pt){
+  if(!pt)return;
+  restoreSelection();
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0||sel.isCollapsed){showToast('Önce metin seç');document.getElementById('puntoSelect').value='';return;}
+  const range=sel.getRangeAt(0);
+  const span=document.createElement('span');
+  span.style.fontSize=pt+'px';
+  try{
+    range.surroundContents(span);
+  }catch(e){
+    // cross-element selection fallback
+    const frag=range.extractContents();
+    span.appendChild(frag);range.insertNode(span);
+  }
+  document.getElementById('puntoSelect').value='';
+  saveSelection();
+}
+
+function applyTextColor(color){
+  restoreSelection();
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0||sel.isCollapsed){showToast('Önce metin seç');return;}
+  const range=sel.getRangeAt(0);
+  const span=document.createElement('span');
+  span.style.color=color;
+  try{
+    range.surroundContents(span);
+  }catch(e){
+    const frag=range.extractContents();span.appendChild(frag);range.insertNode(span);
+  }
+  saveSelection();
+}
+
+function applyHighlight(color){
+  restoreSelection();
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0||sel.isCollapsed){showToast('Önce metin seç');return;}
+  const range=sel.getRangeAt(0);
+  if(color==='transparent'){
+    // Remove highlight spans in selection
+    document.execCommand('hiliteColor',false,'transparent');
+    saveSelection();return;
+  }
+  const span=document.createElement('span');
+  span.style.backgroundColor=color;
+  try{
+    range.surroundContents(span);
+  }catch(e){
+    const frag=range.extractContents();span.appendChild(frag);range.insertNode(span);
+  }
+  saveSelection();
+}
+
 function applyChordStyle(){
-  const ed=document.getElementById('richEditor');ed.focus();
+  restoreSelection();
   const sel=window.getSelection();
-  if(sel&&sel.rangeCount>0&&!sel.isCollapsed){
-    const range=sel.getRangeAt(0);const span=document.createElement('span');
-    span.style.cssText='color:#1A5276;font-family:monospace;font-weight:700;font-size:13px';
-    try{range.surroundContents(span);}catch(e){}
-  }
+  if(!sel||sel.rangeCount===0||sel.isCollapsed){showToast('Önce metin seç');return;}
+  const range=sel.getRangeAt(0);
+  const span=document.createElement('span');
+  span.style.cssText='color:#1A5276;font-family:monospace;font-weight:700;font-size:13px';
+  try{range.surroundContents(span);}catch(e){const frag=range.extractContents();span.appendChild(frag);range.insertNode(span);}
+  saveSelection();
 }
 
-function closePalettes(){document.getElementById('textPal').classList.remove('open');document.getElementById('hiPal').classList.remove('open')}
-function togglePalette(type){
-  const tp=document.getElementById('textPal'),hp=document.getElementById('hiPal');
-  const tb=document.getElementById('formatToolbar');
-  const rect=tb.getBoundingClientRect();
-  if(type==='text'){hp.classList.remove('open');tp.style.top=(rect.bottom+4)+'px';tp.style.left='10px';tp.classList.toggle('open');}
-  else{tp.classList.remove('open');hp.style.top=(rect.bottom+4)+'px';hp.style.left='10px';hp.classList.toggle('open');}
-}
-function applyCol(color,type){
-  closePalettes();document.getElementById('richEditor').focus();
-  if(type==='text'){document.execCommand('foreColor',false,color);document.getElementById('textColorDot').style.background=color;}
-  else{document.execCommand('hiliteColor',false,color==='transparent'?'transparent':color);document.getElementById('hlColorDot').style.background=color==='transparent'?'#fff':color;}
-}
-document.addEventListener('click',e=>{if(!e.target.closest('.fmt-btn')&&!e.target.closest('.color-palette'))closePalettes()});
+// Prevent toolbar buttons from stealing focus on desktop
+document.getElementById('formatToolbar').addEventListener('mousedown',e=>{
+  if(e.target.tagName!=='SELECT')e.preventDefault();
+});
 
-// PLAYLISTS
+// ═══ PLAYLISTS ═══
 function renderPlaylists(){
   document.getElementById('playlistCountLabel').textContent=`${playlists.length} playlist`;
   const c=document.getElementById('playlistListContainer');
@@ -595,28 +776,181 @@ function renderPlaylists(){
     <div style="color:var(--ink-faint)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
   </button>`).join('');
 }
+
 function openPlaylist(id){currentPlaylistId=id;renderPlaylistDetail(id);showScreen('playlistDetailScreen')}
+
 function renderPlaylistDetail(id){
   const pl=playlists.find(p=>p.id===id);if(!pl)return;
   document.getElementById('plDetailTitle').textContent=pl.name;
   document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;
   const c=document.getElementById('plDetailSongList');
-  if(!pl.songs.length){c.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><h3>Şarkı yok</h3><p>Şarkı sayfasından "Playlist'e ekle" diyerek buraya ekleyebilirsin</p></div>`;return;}
-  c.innerHTML=pl.songs.map((sid,i)=>{const song=songs.find(s=>s.id===sid);if(!song)return'';
-    return`<div class="playlist-song-item"><div class="ps-num">${i+1}</div><div class="ps-info" onclick="openSong('${song.id}',true)"><div class="ps-name">${escHtml(song.title)}</div>${song.artist?`<div class="ps-artist">${escHtml(song.artist)}</div>`:''}</div><button class="ps-remove" onclick="removeFromPlaylist('${id}','${song.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`;
+  if(!pl.songs.length){c.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><h3>Şarkı yok</h3><p>+ butonuna tıklayarak şarkı ekle</p></div>`;return;}
+  c.innerHTML=pl.songs.map((sid,i)=>{
+    const song=songs.find(s=>s.id===sid);if(!song)return'';
+    return`<div class="playlist-song-item" data-id="${song.id}" data-idx="${i}" draggable="true">
+      <div class="ps-drag" title="Sıralamak için sürükle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+      </div>
+      <div class="ps-num">${i+1}</div>
+      <div class="ps-info" onclick="openSong('${song.id}',true)">
+        <div class="ps-name">${escHtml(song.title)}</div>
+        ${song.artist?`<div class="ps-artist">${escHtml(song.artist)}</div>`:''}
+      </div>
+      <button class="ps-remove" onclick="removeFromPlaylist('${id}','${song.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+  initDragSort(id);
+}
+
+// ═══ DRAG SORT ═══
+function initDragSort(plId){
+  const container=document.getElementById('plDetailSongList');
+  let dragEl=null, dragIdx=null;
+
+  container.querySelectorAll('.playlist-song-item').forEach(item=>{
+    item.addEventListener('dragstart',e=>{
+      dragEl=item;dragIdx=parseInt(item.dataset.idx);
+      e.dataTransfer.effectAllowed='move';
+      setTimeout(()=>item.style.opacity='0.4',0);
+    });
+    item.addEventListener('dragend',()=>{item.style.opacity='1';container.querySelectorAll('.playlist-song-item').forEach(i=>i.classList.remove('drag-over'))});
+    item.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';item.classList.add('drag-over')});
+    item.addEventListener('dragleave',()=>item.classList.remove('drag-over'));
+    item.addEventListener('drop',e=>{
+      e.preventDefault();item.classList.remove('drag-over');
+      const targetIdx=parseInt(item.dataset.idx);
+      if(dragIdx===targetIdx)return;
+      const pl=playlists.find(p=>p.id===plId);if(!pl)return;
+      const moved=pl.songs.splice(dragIdx,1)[0];
+      pl.songs.splice(targetIdx,0,moved);
+      saveData();renderPlaylistDetail(plId);
+    });
+
+    // Touch support
+    const drag=item.querySelector('.ps-drag');
+    if(drag)setupTouchDrag(item,container,plId);
+  });
+}
+
+function setupTouchDrag(item,container,plId){
+  let startY,startIdx,clone;
+  item.addEventListener('touchstart',e=>{
+    if(!e.target.closest('.ps-drag'))return;
+    e.preventDefault();
+    startY=e.touches[0].clientY;
+    startIdx=parseInt(item.dataset.idx);
+    item.style.opacity='0.5';
+    clone=item.cloneNode(true);
+    clone.style.cssText=`position:fixed;left:0;right:0;z-index:999;opacity:0.8;pointer-events:none;background:var(--terracotta-pale);`;
+    clone.style.top=item.getBoundingClientRect().top+'px';
+    document.body.appendChild(clone);
+  },{passive:false});
+  item.addEventListener('touchmove',e=>{
+    if(!clone)return;e.preventDefault();
+    const dy=e.touches[0].clientY-startY;
+    clone.style.transform=`translateY(${dy}px)`;
+    // Find target
+    const y=e.touches[0].clientY;
+    container.querySelectorAll('.playlist-song-item').forEach(el=>{
+      const r=el.getBoundingClientRect();
+      if(y>=r.top&&y<=r.bottom)el.classList.add('drag-over');
+      else el.classList.remove('drag-over');
+    });
+  },{passive:false});
+  item.addEventListener('touchend',e=>{
+    if(!clone)return;
+    item.style.opacity='1';clone.remove();clone=null;
+    const target=container.querySelector('.playlist-song-item.drag-over');
+    container.querySelectorAll('.playlist-song-item').forEach(i=>i.classList.remove('drag-over'));
+    if(!target)return;
+    const targetIdx=parseInt(target.dataset.idx);
+    if(startIdx===targetIdx)return;
+    const pl=playlists.find(p=>p.id===plId);if(!pl)return;
+    const moved=pl.songs.splice(startIdx,1)[0];
+    pl.songs.splice(targetIdx,0,moved);
+    saveData();renderPlaylistDetail(plId);
+  });
+}
+
+function removeFromPlaylist(plId,songId){
+  const pl=playlists.find(p=>p.id===plId);if(!pl)return;
+  pl.songs=pl.songs.filter(s=>s!==songId);saveData();renderPlaylistDetail(plId);
+  document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;showToast('Şarkı kaldırıldı');
+}
+
+function renameCurrentPlaylist(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  const n=prompt('Yeni playlist adı:',pl.name);if(n&&n.trim()){pl.name=n.trim();saveData();document.getElementById('plDetailTitle').textContent=pl.name;showToast('Yeniden adlandırıldı')}
+}
+
+// ═══ SONG PICKER (playlist'e şarkı ekleme) ═══
+function openAddSongsToPlaylist(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  document.getElementById('addSongsTitle').textContent=`"${pl.name}" için Şarkı Ekle`;
+  document.getElementById('pickerSearch').value='';
+  renderPicker();
+  document.getElementById('addSongsModal').classList.add('open');
+}
+
+function renderPicker(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  const q=(document.getElementById('pickerSearch').value||'').toLowerCase();
+  const filtered=songs.filter(s=>s.title.toLowerCase().includes(q)||(s.artist||'').toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title,'tr'));
+  const container=document.getElementById('songPickerList');
+  if(!filtered.length){container.innerHTML='<p style="color:var(--ink-light);font-size:14px;padding:16px 0;text-align:center">Şarkı bulunamadı</p>';return;}
+  container.innerHTML=filtered.map(song=>{
+    const inPl=pl.songs.includes(song.id);
+    return`<div class="picker-song-item" onclick="togglePicker('${song.id}')">
+      <div class="picker-check ${inPl?'checked':''}" id="pk_${song.id}"></div>
+      <div style="flex:1;min-width:0">
+        <div class="picker-name">${escHtml(song.title)}</div>
+        ${song.artist?`<div class="picker-artist">${escHtml(song.artist)}</div>`:''}
+      </div>
+    </div>`;
   }).join('');
 }
-function removeFromPlaylist(plId,songId){const pl=playlists.find(p=>p.id===plId);if(!pl)return;pl.songs=pl.songs.filter(s=>s!==songId);saveData();renderPlaylistDetail(plId);document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;showToast('Şarkı kaldırıldı')}
-function renameCurrentPlaylist(){const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;const n=prompt('Yeni playlist adı:',pl.name);if(n&&n.trim()){pl.name=n.trim();saveData();document.getElementById('plDetailTitle').textContent=pl.name;showToast('Yeniden adlandırıldı')}}
 
-// MODALS
-function openNewPlaylistModal(){document.getElementById('newPlaylistName').value='';document.getElementById('newPlaylistModal').classList.add('open');setTimeout(()=>document.getElementById('newPlaylistName').focus(),300)}
-function createPlaylist(){const n=document.getElementById('newPlaylistName').value.trim();if(!n){showToast('Playlist adı girin');return;}playlists.push({id:genId(),name:n,songs:[]});saveData();closeModal('newPlaylistModal');renderPlaylists();showToast('Playlist oluşturuldu')}
+function togglePicker(id){
+  document.getElementById('pk_'+id)?.classList.toggle('checked');
+}
+
+function savePickerSongs(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  let added=0,removed=0;
+  songs.forEach(song=>{
+    const el=document.getElementById('pk_'+song.id);if(!el)return;
+    const checked=el.classList.contains('checked');
+    const was=pl.songs.includes(song.id);
+    if(checked&&!was){pl.songs.push(song.id);added++;}
+    else if(!checked&&was){pl.songs=pl.songs.filter(s=>s!==song.id);removed++;}
+  });
+  saveData();closeModal('addSongsModal');renderPlaylistDetail(currentPlaylistId);
+  document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;
+  const msg=[];if(added)msg.push(`${added} eklendi`);if(removed)msg.push(`${removed} çıkarıldı`);
+  if(msg.length)showToast(msg.join(', '));
+}
+
+// ═══ MODALS ═══
+function openNewPlaylistModal(){
+  document.getElementById('newPlaylistName').value='';
+  document.getElementById('newPlaylistModal').classList.add('open');
+  setTimeout(()=>document.getElementById('newPlaylistName').focus(),300);
+}
+function createPlaylist(){
+  const n=document.getElementById('newPlaylistName').value.trim();if(!n){showToast('Playlist adı girin');return;}
+  playlists.push({id:genId(),name:n,songs:[]});saveData();closeModal('newPlaylistModal');renderPlaylists();showToast('Playlist oluşturuldu');
+}
 function openAddToPlaylist(){
   if(!playlists.length){showToast('Önce bir playlist oluştur');return;}
   const song=songs.find(s=>s.id===currentSongId);if(!song)return;
-  document.getElementById('playlistCheckList').innerHTML=playlists.map(pl=>{const ch=pl.songs.includes(song.id);
-    return`<div class="modal-playlist-item" onclick="toggleCheck('${pl.id}')"><div class="check-circle ${ch?'checked':''}" id="chk_${pl.id}"></div><div><div class="modal-pl-name">${escHtml(pl.name)}</div><div class="modal-pl-count">${pl.songs.length} şarkı</div></div></div>`;
+  document.getElementById('playlistCheckList').innerHTML=playlists.map(pl=>{
+    const ch=pl.songs.includes(song.id);
+    return`<div class="modal-playlist-item" onclick="toggleCheck('${pl.id}')">
+      <div class="check-circle ${ch?'checked':''}" id="chk_${pl.id}"></div>
+      <div><div class="modal-pl-name">${escHtml(pl.name)}</div><div class="modal-pl-count">${pl.songs.length} şarkı</div></div>
+    </div>`;
   }).join('');
   document.getElementById('addToPlaylistModal').classList.add('open');
 }
@@ -631,7 +965,7 @@ function deleteCurrentSong(){closeModal('songOptionsModal');const song=songs.fin
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 function closeModalIfBg(e,id){if(e.target.id===id)closeModal(id)}
 
-// PDF IMPORT (FIXED - preserves line structure)
+// ═══ PDF IMPORT ═══
 async function handleFileUpload(input){
   const file=input.files[0];if(!file)return;input.value='';
   const ext=file.name.split('.').pop().toLowerCase();
@@ -648,59 +982,38 @@ async function handleFileUpload(input){
       pf.style.width='80%';
     }
     pt.textContent='Şarkılar ayrıştırılıyor…';pf.style.width='90%';
-    const imported=parseSongPages(pages);
-    pf.style.width='100%';
+    const imported=parseSongPages(pages);pf.style.width='100%';
     if(!imported.length){pt.textContent='Şarkı bulunamadı';showToast('Şarkı ayrıştırılamadı');return;}
     let added=0;
     imported.forEach(s=>{const ex=songs.find(x=>x.title.toLowerCase()===s.title.toLowerCase());if(!ex){songs.push({...s,id:genId()});added++;}});
     saveData();renderSongList();showToast(`${added} şarkı eklendi`);
-    pt.textContent=`${added} şarkı eklendi ✓ — düzenlemek için şarkıya tıkla`;
-    setTimeout(()=>{pw.style.display='none'},4000);
+    pt.textContent=`${added} şarkı eklendi ✓`;setTimeout(()=>{pw.style.display='none'},4000);
   }catch(e){pt.textContent='Hata: '+e.message;console.error(e)}
 }
-
 async function extractPDFPages(file,onProgress){
   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   const buf=await file.arrayBuffer();
   const pdf=await pdfjsLib.getDocument({data:buf}).promise;
   const pages=[];
   for(let i=1;i<=pdf.numPages;i++){
-    const page=await pdf.getPage(i);
-    const content=await page.getTextContent();
-    // Group items by Y coordinate to reconstruct lines
+    const page=await pdf.getPage(i);const content=await page.getTextContent();
     const lineMap={};
-    content.items.forEach(item=>{
-      const y=Math.round(item.transform[5]*10)/10; // round to 1 decimal
-      if(!lineMap[y])lineMap[y]=[];
-      lineMap[y].push({x:item.transform[4],str:item.str});
-    });
-    // Sort Y descending (PDF coords: bottom=0), then X ascending within each line
+    content.items.forEach(item=>{const y=Math.round(item.transform[5]*10)/10;if(!lineMap[y])lineMap[y]=[];lineMap[y].push({x:item.transform[4],str:item.str})});
     const ys=Object.keys(lineMap).map(Number).sort((a,b)=>b-a);
-    const lines=ys.map(y=>{
-      const items=lineMap[y].sort((a,b)=>a.x-b.x);
-      return items.map(it=>it.str).join(' ').trim();
-    }).filter(l=>l.length>0);
-    pages.push(lines.join('\n'));
-    onProgress(i/pdf.numPages);
+    const lines=ys.map(y=>lineMap[y].sort((a,b)=>a.x-b.x).map(it=>it.str).join(' ').trim()).filter(l=>l.length>0);
+    pages.push(lines.join('\n'));onProgress(i/pdf.numPages);
   }
   return pages;
 }
-
 function parseSongPages(pages){
   const result=[];
   pages.forEach(pageText=>{
     if(!pageText||pageText.length<10)return;
-    const lines=pageText.split('\n').map(l=>l.trim()).filter(Boolean);
-    if(!lines.length)return;
-    // Skip index pages (lots of "1. AFFET" style lines)
-    const numberedLines=lines.filter(l=>/^\d+[\.\)]\s/.test(l)).length;
-    if(numberedLines>4)return;
-    if(lines.length<2)return;
-    let rawTitle=lines[0].replace(/\(başa dön\)/gi,'').trim();
-    let title='',artist='';
-    const dashMatch=rawTitle.match(/^(.+?)\s*[–\-]\s*(.+)$/);
-    if(dashMatch){artist=dashMatch[1].trim();title=dashMatch[2].trim();}
-    else{title=rawTitle;}
+    const lines=pageText.split('\n').map(l=>l.trim()).filter(Boolean);if(!lines.length)return;
+    const numberedLines=lines.filter(l=>/^\d+[\.\)]\s/.test(l)).length;if(numberedLines>4)return;if(lines.length<2)return;
+    let rawTitle=lines[0].replace(/\(başa dön\)/gi,'').trim();let title='',artist='';
+    const dm=rawTitle.match(/^(.+?)\s*[–\-]\s*(.+)$/);
+    if(dm){artist=dm[1].trim();title=dm[2].trim();}else{title=rawTitle;}
     if(!title||title.length<2)return;
     const lyrics=lines.slice(1).map(l=>l.replace(/\(başa dön\)/gi,'').trim()).filter(Boolean).join('\n').trim();
     result.push({title,artist,lyrics,richHtml:null});
@@ -708,7 +1021,7 @@ function parseSongPages(pages){
   return result;
 }
 
-// OCR
+// ═══ OCR ═══
 async function handleImageUpload(input){
   const file=input.files[0];if(!file)return;input.value='';
   const pw=document.getElementById('ocrProgress'),pf=document.getElementById('ocrProgressFill'),pt=document.getElementById('ocrProgressText');
@@ -717,26 +1030,23 @@ async function handleImageUpload(input){
     const{data:{text}}=await Tesseract.recognize(file,'tur+eng',{logger:m=>{if(m.status==='recognizing text'){pf.style.width=(10+m.progress*80)+'%';pt.textContent=`Metin okunuyor… %${Math.round(m.progress*100)}`;}}});
     pf.style.width='95%';
     const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
-    const title=lines[0]||'İsimsiz Şarkı';
-    const lyrics=lines.slice(1).join('\n');
+    const title=lines[0]||'İsimsiz Şarkı';const lyrics=lines.slice(1).join('\n');
     const id=genId();songs.push({id,title,artist:'',lyrics,richHtml:null});
     saveData();renderSongList();pf.style.width='100%';
-    pt.textContent='Eklendi ✓ — Şarkıya tıklayıp "Düzenle" ile düzeltebilirsin';
-    showToast(`"${title}" eklendi`);setTimeout(()=>{pw.style.display='none'},4000);
+    pt.textContent='Eklendi ✓';showToast(`"${title}" eklendi`);setTimeout(()=>{pw.style.display='none'},4000);
   }catch(e){pt.textContent='OCR hatası: '+e.message}
 }
 
-// MANUAL
+// ═══ MANUAL ═══
 function addManualSongAndEdit(){
-  const title=document.getElementById('manualTitle').value.trim();
-  const artist=document.getElementById('manualArtist').value.trim();
+  const title=document.getElementById('manualTitle').value.trim();const artist=document.getElementById('manualArtist').value.trim();
   if(!title){showToast('Şarkı adı gerekli');return;}
   const id=genId();songs.push({id,title,artist,lyrics:'',richHtml:null});saveData();
   document.getElementById('manualTitle').value='';document.getElementById('manualArtist').value='';
   currentSongId=id;previousScreen='songsScreen';openEditor();showToast(`"${title}" oluşturuldu`);
 }
 
-// INIT
+// ═══ INIT ═══
 loadData();renderSongList();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
