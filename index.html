@@ -316,6 +316,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
   </div>
   <input type="text" class="editor-artist-input" id="editorArtist" placeholder="Sanatçı adı…">
   <!-- FORMAT TOOLBAR -->
+  <div style="padding:4px 10px;font-size:10px;color:var(--ink-light);background:var(--cream-dark);border-top:1px solid var(--ink-faint);display:none" id="editorHint">
+    💡 Akorları seçip <b>Am</b> butonuna bas → transpoz edilebilir hale gelir
+  </div>
   <div class="format-toolbar visible" id="formatToolbar">
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('bold')"><b>B</b></button>
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('italic')"><i style="font-family:serif">İ</i></button>
@@ -571,6 +574,7 @@ function showScreen(id){
   const noNav=['songDetailScreen','importScreen','editorScreen'];
   document.getElementById('bottomNav').style.display=noNav.includes(id)?'none':'flex';
   document.getElementById('formatToolbar').classList.toggle('visible',id==='editorScreen');
+  document.getElementById('editorHint').style.display=id==='editorScreen'?'block':'none';
   if(id!=='songDetailScreen'){quickJumpOpen=false;updateQJPanel();}
 }
 function switchTab(tab){
@@ -754,17 +758,22 @@ function transposePlainText(text,semitones){
 function transposeHTML(html,semitones){
   const tmp=document.createElement('div');
   tmp.innerHTML=html;
-  // Transpose chord spans — check inline style for chord color (#1A5276) stored as rgb or hex
   tmp.querySelectorAll('span').forEach(span=>{
     const styleAttr=span.getAttribute('style')||'';
-    const isChordSpan=styleAttr.includes('1A5276')||styleAttr.includes('1a5276')||
-                      styleAttr.includes('26, 82')||styleAttr.includes('26,82')||
-                      (styleAttr.includes('monospace'));
-    if(isChordSpan){
+    // Detect chord spans: blue monospace (#1A5276) OR terracotta/red (#C1440E, #C0392B)
+    const isChord=styleAttr.includes('1A5276')||styleAttr.includes('1a5276')||
+                  styleAttr.includes('26, 82')||styleAttr.includes('26,82')||
+                  styleAttr.includes('C1440E')||styleAttr.includes('c1440e')||
+                  styleAttr.includes('193, 68')||styleAttr.includes('193,68')||
+                  styleAttr.includes('C0392B')||styleAttr.includes('c0392b')||
+                  styleAttr.includes('192, 57')||styleAttr.includes('192,57')||
+                  styleAttr.includes('monospace');
+    if(isChord){
+      // Preserve whitespace by transposing word by word
       span.textContent=transposeChordToken(span.textContent,semitones);
     }
   });
-  // Transpose plain chord-line divs (no child elements, text matches chord pattern)
+  // Transpose plain chord-line divs
   tmp.querySelectorAll('div').forEach(div=>{
     if(div.children.length===0){
       const t=div.textContent.trim();
@@ -914,7 +923,8 @@ function applyChordStyle(){
   if(!sel||sel.rangeCount===0||sel.isCollapsed){showToast('Önce metin seç');return;}
   const range=sel.getRangeAt(0);
   const span=document.createElement('span');
-  span.style.cssText='color:#1A5276;font-family:monospace;font-weight:700;font-size:13px';
+  // Use monospace + chord color but preserve-spaces to avoid hizalama bozulması
+  span.style.cssText='color:#C1440E;font-family:monospace;font-weight:600;white-space:pre';
   try{range.surroundContents(span);}catch(e){const frag=range.extractContents();span.appendChild(frag);range.insertNode(span);}
   saveSelection();
 }
