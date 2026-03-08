@@ -711,6 +711,7 @@ function applyTranspoz(){
     else{el.innerHTML=renderPlain(song.lyrics||'');el.style.cssText='';}
     return;
   }
+  // Always transpose from original source, not from current (already-transposed) DOM
   if(song.richHtml&&song.richHtml.trim()){
     el.innerHTML=transposeHTML(song.richHtml,currentTranspoz);
     el.style.cssText='font-family:Lora,serif;font-size:16px;line-height:1.85';
@@ -753,20 +754,23 @@ function transposePlainText(text,semitones){
 function transposeHTML(html,semitones){
   const tmp=document.createElement('div');
   tmp.innerHTML=html;
-  // Transpose chord spans (blue monospace style)
+  // Transpose chord spans — check inline style for chord color (#1A5276) stored as rgb or hex
   tmp.querySelectorAll('span').forEach(span=>{
-    const s=span.style;
-    if((s.color&&s.color.includes('26')&&s.fontFamily&&s.fontFamily.includes('mono'))||span.classList.contains('chord-line')){
+    const styleAttr=span.getAttribute('style')||'';
+    const isChordSpan=styleAttr.includes('1A5276')||styleAttr.includes('1a5276')||
+                      styleAttr.includes('26, 82')||styleAttr.includes('26,82')||
+                      (styleAttr.includes('monospace'));
+    if(isChordSpan){
       span.textContent=transposeChordToken(span.textContent,semitones);
     }
   });
-  // Transpose plain chord-line divs
+  // Transpose plain chord-line divs (no child elements, text matches chord pattern)
   tmp.querySelectorAll('div').forEach(div=>{
     if(div.children.length===0){
       const t=div.textContent.trim();
       if(CL_RE.test(t)&&t.length>0)div.textContent=transposeChordToken(t,semitones);
     }else if(div.classList.contains('chord-line')){
-      div.innerHTML=escHtml(transposeChordToken(div.textContent,semitones));
+      div.textContent=transposeChordToken(div.textContent,semitones);
     }
   });
   return tmp.innerHTML;
