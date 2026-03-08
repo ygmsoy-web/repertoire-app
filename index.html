@@ -109,12 +109,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .save-btn{padding:7px 14px;background:var(--terracotta);color:white;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none;white-space:nowrap}
 .editor-artist-input{width:100%;padding:7px 14px;border:none;border-bottom:1px solid var(--cream-dark);background:var(--cream);outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-mid)}
 .editor-artist-input::placeholder{color:var(--ink-faint)}
-.editor-body{flex:1;overflow-y:auto;padding:14px 18px;padding-bottom:80px}
+.editor-body{flex:1;overflow-y:auto;padding:14px 18px 40px}
 #richEditor{min-height:200px;outline:none;font-family:'Lora',serif;font-size:16px;line-height:1.85;color:var(--ink);word-break:break-word}
 #richEditor:empty:before{content:'Şarkı sözlerini buraya yaz…';color:var(--ink-faint);pointer-events:none}
 
 /* FORMAT TOOLBAR — fixed bottom */
-.format-toolbar{position:fixed;bottom:0;left:0;right:0;z-index:300;display:none;align-items:center;gap:2px;padding:6px 8px;padding-bottom:calc(6px + env(safe-area-inset-bottom));overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1.5px solid var(--ink-faint);background:var(--cream);scrollbar-width:none}
+.format-toolbar{position:relative;bottom:auto;left:auto;right:auto;z-index:300;display:none;align-items:center;gap:2px;padding:6px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1.5px solid var(--ink-faint);border-bottom:1.5px solid var(--ink-faint);background:var(--cream);scrollbar-width:none;flex-shrink:0}
 .format-toolbar::-webkit-scrollbar{display:none}
 .format-toolbar.visible{display:flex}
 .fmt-btn{min-width:34px;height:34px;border:1px solid transparent;border-radius:7px;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--ink-mid);font-family:'DM Sans',sans-serif;flex-shrink:0;padding:0 7px;-webkit-appearance:none}
@@ -302,10 +302,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
     <button class="save-btn" onclick="saveFromEditor()">Kaydet</button>
   </div>
   <input type="text" class="editor-artist-input" id="editorArtist" placeholder="Sanatçı adı…">
-  <div class="editor-body">
-    <div id="richEditor" contenteditable="true" spellcheck="false"></div>
-  </div>
-  <!-- FORMAT TOOLBAR fixed at bottom -->
+  <!-- FORMAT TOOLBAR -->
   <div class="format-toolbar visible" id="formatToolbar">
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('bold')"><b>B</b></button>
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('italic')"><i style="font-family:serif">İ</i></button>
@@ -339,6 +336,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
     <div class="fmt-sep"></div>
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('removeFormat')" style="font-size:10px;color:var(--ink-light)">✕fmt</button>
   </div>
+  <div class="editor-body">
+    <div id="richEditor" contenteditable="true" spellcheck="false"></div>
+  </div>
+
 </div>
 
 <!-- ═══ PLAYLISTS ═══ -->
