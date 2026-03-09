@@ -782,10 +782,17 @@ function applyTranspoz(){
   const song=songs.find(s=>s.id===currentSongId);if(!song)return;
   const el=document.getElementById('detailLyrics');
   if(currentTranspoz===0){
-    el.innerHTML=renderPlain(song.lyrics||'');
-    el.style.cssText='';
+    // Transpoz sıfırsa orijinal görünüme dön
+    if(song.richHtml&&song.richHtml.trim()){
+      el.innerHTML=song.richHtml;
+      el.style.cssText='font-family:\'Lora\',serif;font-size:16px;line-height:1.85;white-space:pre-wrap;word-break:break-word';
+    } else {
+      el.innerHTML=renderPlain(song.lyrics||'');
+      el.style.cssText='';
+    }
     return;
   }
+  // Transpoz uygulanınca lyrics üzerinden çalış (format geçici olarak kaybolur)
   el.innerHTML=transposePlainText(song.lyrics||'',currentTranspoz);
   el.style.cssText='';
 }
