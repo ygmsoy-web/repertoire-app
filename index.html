@@ -675,7 +675,11 @@ function renderSongList(){
       </div>`).join('');
   }
 }
-function detectChords(t){return /\b[A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?\b/.test((t||'').replace(/<[^>]*>/g,''))}
+function detectChords(t){
+  // Metinde en az bir gerçek akor satırı var mı?
+  const text=(t||'').replace(/<[^>]*>/g,'');
+  return text.split('\n').some(line=>isChordLine(line.trim()));
+}
 
 // ═══ SONG DETAIL ═══
 function openSong(id,fromPlaylist){
@@ -752,18 +756,14 @@ function initSongSwipe(){
 
 function renderPlain(text){
   if(!text)return'<span style="color:var(--ink-light);font-style:italic">Söz yok</span>';
-  const cr=/^[\s]*([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?(?:\/[A-G][#b]?)?[\s]*){1,}[\s]*$/;
   return text.split('\n').map(line=>{
-    if(cr.test(line.trim())&&line.trim().length>0)return`<div class="chord-line">${escHtml(line)}</div>`;
-    return`<div style="font-family:'Lora',serif;font-size:16px;line-height:1.85">${escHtml(line)||'&nbsp;'}</div>`;
+    return`<div>${escHtml(line)||'&nbsp;'}</div>`;
   }).join('');
 }
 
 // ═══ TRANSPOZ ═══
-// ═══ TRANSPOZ ═══
 const NOTES_S=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 const NOTES_F=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
-const PREFER_FLAT=['F','Bb','Eb','Ab','Db','Gb','Dm','Gm','Cm','Fm','Bbm','Ebm'];
 let currentTranspoz=0;
 
 function transpoz(delta){
@@ -778,28 +778,27 @@ function resetTranspoz(){
   document.getElementById('transpozKey').textContent='';
 }
 
-function applyTranspoz(){
-  const song=songs.find(s=>s.id===currentSongId);if(!song)return;
-  const el=document.getElementById('detailLyrics');
-  const hasRich=song.richHtml&&song.richHtml.trim();
-  if(currentTranspoz===0){
-    if(hasRich){
-      el.innerHTML=song.richHtml;
-      el.style.cssText='font-family:\'Lora\',serif;font-size:16px;line-height:1.85;white-space:pre-wrap;word-break:break-word';
-    } else {
-      el.innerHTML=renderPlain(song.lyrics||'');
-      el.style.cssText='';
-    }
-    return;
+// Katı akor satırı tespiti:
+// Satır sadece akorlardan oluşmalı
+// Tek "E" gibi tek harf kelimeler ancak bilinen nota ise ve satırda başka akor da varsa geçer
+const CHORD_TOKEN=/^[A-G][#b]?(maj7|maj9|maj6|maj|min7|min9|min|m7b5|m7|m9|m|dim7|dim|aug|sus4|sus2|sus|add9|add|7b5|7b9|7|9|11|13|6|5|2)?(\/[A-G][#b]?)?$/;
+
+function isChordLine(line){
+  const t=line.trim();
+  if(!t)return false;
+  const tokens=t.split(/\s+/);
+  if(tokens.length===0)return false;
+  // Her token akor olmalı
+  const allChords=tokens.every(tok=>CHORD_TOKEN.test(tok));
+  if(!allChords)return false;
+  // Sadece tek harf tek token varsa ("E", "A", "B" gibi) — söz satırı olabilir
+  // En az bir token suffix içermeli VEYA token sayısı 2+ olmalı
+  if(tokens.length===1){
+    const tok=tokens[0];
+    // Suffix yoksa (sadece kök nota) ve büyük harf tek karakter — şüpheli
+    if(/^[A-G]$/.test(tok))return false;
   }
-  if(hasRich){
-    // richHtml üzerinde transpoz — format korunur
-    el.innerHTML=transposeHTML(song.richHtml,currentTranspoz);
-    el.style.cssText='font-family:\'Lora\',serif;font-size:16px;line-height:1.85;white-space:pre-wrap;word-break:break-word';
-  } else {
-    el.innerHTML=transposePlainText(song.lyrics||'',currentTranspoz);
-    el.style.cssText='';
-  }
+  return true;
 }
 
 function transposeRoot(root,semitones){
@@ -807,60 +806,68 @@ function transposeRoot(root,semitones){
   if(idx===-1)idx=NOTES_F.indexOf(root);
   if(idx===-1)return root;
   const newIdx=((idx+semitones)%12+12)%12;
-  // decide sharp vs flat based on original root preference
   const useFlat=NOTES_F.indexOf(root)!==-1&&NOTES_S.indexOf(root)===-1;
   return useFlat?NOTES_F[newIdx]:NOTES_S[newIdx];
 }
 
 const CHORD_RE=/\b([A-G][#b]?)(maj7|maj9|maj6|maj|min7|min9|min|m7b5|m7|m9|m|dim7|dim|aug|sus4|sus2|sus|add9|add|7b5|7b9|7|9|11|13|6|5|2)?(?:\/([A-G][#b]?))?\b/g;
 
-function transposeChordToken(token,semitones){
-  return token.replace(CHORD_RE,(match,root,qual,bass)=>{
-    const newRoot=transposeRoot(root,semitones);
-    const newBass=bass?'/'+transposeRoot(bass,semitones):'';
-    return newRoot+(qual||'')+newBass;
+function transposeChordLine(line,semitones){
+  // Boşlukları koruyarak sadece akor tokenlarını transpoze et
+  return line.replace(/\S+/g,tok=>{
+    if(CHORD_TOKEN.test(tok)){
+      return tok.replace(/^([A-G][#b]?)/,(root)=>transposeRoot(root,semitones))
+                .replace(/\/([A-G][#b]?)/,(_,bass)=>'/'+transposeRoot(bass,semitones));
+    }
+    return tok;
   });
 }
 
-const CL_RE=/^([\s]*([A-G][#b]?(?:maj7|maj9|maj6|maj|min7|min9|min|m7b5|m7|m9|m|dim7|dim|aug|sus4|sus2|sus|add9|add|7b5|7b9|7|9|11|13|6|5|2)?(?:\/[A-G][#b]?)?[\s]*)+)$/;
+function applyTranspoz(){
+  const song=songs.find(s=>s.id===currentSongId);if(!song)return;
+  const el=document.getElementById('detailLyrics');
+  const hasRich=song.richHtml&&song.richHtml.trim();
 
-function transposePlainText(text,semitones){
-  if(!text)return'<span style="color:var(--ink-light);font-style:italic">Söz yok</span>';
-  return text.split('\n').map(line=>{
-    const t=line.trim();
-    if(CL_RE.test(t)&&t.length>0)return`<div class="chord-line">${escHtml(transposeChordToken(t,semitones))}</div>`;
-    return`<div style="font-family:'Lora',serif;font-size:16px;line-height:1.85">${escHtml(line)||'&nbsp;'}</div>`;
-  }).join('');
-}
+  if(currentTranspoz===0){
+    if(hasRich){
+      el.innerHTML=song.richHtml;
+      el.style.cssText='font-family:\'Lora\',serif;font-size:16px;line-height:1.85;white-space:pre-wrap;word-break:break-word';
+    } else {
+      el.innerHTML=renderPlain(song.lyrics||'');
+      el.style.cssText='white-space:pre-wrap;word-break:break-word';
+    }
+    return;
+  }
 
-function transposeHTML(html,semitones){
-  const tmp=document.createElement('div');
-  tmp.innerHTML=html;
-  tmp.querySelectorAll('span').forEach(span=>{
-    const styleAttr=span.getAttribute('style')||'';
-    // Detect chord spans: blue monospace (#1A5276) OR terracotta/red (#C1440E, #C0392B)
-    const isChord=styleAttr.includes('1A5276')||styleAttr.includes('1a5276')||
-                  styleAttr.includes('26, 82')||styleAttr.includes('26,82')||
-                  styleAttr.includes('C1440E')||styleAttr.includes('c1440e')||
-                  styleAttr.includes('193, 68')||styleAttr.includes('193,68')||
-                  styleAttr.includes('C0392B')||styleAttr.includes('c0392b')||
-                  styleAttr.includes('192, 57')||styleAttr.includes('192,57')||
-                  styleAttr.includes('monospace');
-    if(isChord){
-      // Preserve whitespace by transposing word by word
-      span.textContent=transposeChordToken(span.textContent,semitones);
-    }
-  });
-  // Transpose plain chord-line divs
-  tmp.querySelectorAll('div').forEach(div=>{
-    if(div.children.length===0){
-      const t=div.textContent.trim();
-      if(CL_RE.test(t)&&t.length>0)div.textContent=transposeChordToken(t,semitones);
-    }else if(div.classList.contains('chord-line')){
-      div.textContent=transposeChordToken(div.textContent,semitones);
-    }
-  });
-  return tmp.innerHTML;
+  // Transpoz: lyrics satır satır işle, akor satırlarını transpoze et
+  const lyrics=song.lyrics||'';
+  const transposed=lyrics.split('\n').map(line=>{
+    if(isChordLine(line)) return transposeChordLine(line,currentTranspoz);
+    return line;
+  }).join('\n');
+
+  if(hasRich){
+    // richHtml'deki akor satırlarını transpoze et, format korunsun
+    const tmp=document.createElement('div');
+    tmp.innerHTML=song.richHtml;
+    // Her div/p bir satır — içeriği kontrol et
+    tmp.querySelectorAll('div,p').forEach(div=>{
+      const lineText=div.innerText||div.textContent||'';
+      if(isChordLine(lineText.trim())){
+        // Sadece text node'larını değiştir, child elementleri boz
+        div.childNodes.forEach(node=>{
+          if(node.nodeType===3){// text node
+            node.textContent=transposeChordLine(node.textContent,currentTranspoz);
+          }
+        });
+      }
+    });
+    el.innerHTML=tmp.innerHTML;
+    el.style.cssText='font-family:\'Lora\',serif;font-size:16px;line-height:1.85;white-space:pre-wrap;word-break:break-word';
+  } else {
+    el.innerHTML=renderPlain(transposed);
+    el.style.cssText='white-space:pre-wrap;word-break:break-word';
+  }
 }
 
 // ═══ QUICK JUMP (MASHUP) ═══
