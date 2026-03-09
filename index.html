@@ -1293,26 +1293,25 @@ function addManualSongAndEdit(){
 }
 
 // ═══ ANDROID GERİ TUŞU ═══
-function pushHistory(screenId){
-  history.pushState({screen:screenId},'','');
-  history.pushState({screen:screenId+'_buf'},'','');
+const STACK_SIZE=20;
+let navLock=false;
+
+function fillStack(){
+  for(let i=0;i<STACK_SIZE;i++) history.pushState({depth:i},'','');
 }
 
-window.addEventListener('popstate',(e)=>{
-  // Tampon state geldi — bir adım daha geri git
-  if(e.state&&e.state.screen&&e.state.screen.endsWith('_buf')){
-    history.back();
-    return;
-  }
+function handleBack(){
+  if(navLock)return;
+  navLock=true;
+  setTimeout(()=>navLock=false,400);
 
   const active=document.querySelector('.screen.active');
   if(!active)return;
   const current=active.id;
 
   if(current==='songsScreen'||current==='playlistsScreen'){
-    // En üstteyiz — stack'i yeniden doldur, çıkma
-    history.pushState({screen:current},'','');
-    history.pushState({screen:current+'_buf'},'','');
+    // En üstteyiz — stack'i tekrar doldur
+    fillStack();
     return;
   }
 
@@ -1328,16 +1327,15 @@ window.addEventListener('popstate',(e)=>{
     goHome();
   }
 
-  // Yeni ekran için stack'i doldur
-  const newScreen=document.querySelector('.screen.active');
-  if(newScreen){
-    history.pushState({screen:newScreen.id},'','');
-    history.pushState({screen:newScreen.id+'_buf'},'','');
-  }
+  fillStack();
+}
+
+window.addEventListener('popstate',()=>{
+  handleBack();
 });
 
 // ═══ INIT ═══
-loadData();renderSongList();pushHistory('songsScreen');
+loadData();renderSongList();fillStack();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 </script>
