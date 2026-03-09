@@ -699,8 +699,13 @@ function openSong(id,fromPlaylist){
   resetTranspoz();
   document.getElementById('transpozBar').classList.toggle('visible', hc);
   const el=document.getElementById('detailLyrics');
-  el.innerHTML=renderPlain(song.lyrics||'');
-  el.style.cssText='';
+  if(song.richHtml&&song.richHtml.trim()){
+    el.innerHTML=song.richHtml;
+    el.style.cssText='font-family:\'Lora\',serif;font-size:16px;line-height:1.85;white-space:pre-wrap;word-break:break-word';
+  } else {
+    el.innerHTML=renderPlain(song.lyrics||'');
+    el.style.cssText='';
+  }
   quickJumpOpen=false;
   updateQJPanel();
   // Playlist nav butonları
@@ -929,11 +934,13 @@ function openEditor(){
   const ed=document.getElementById('richEditor');
   ed.innerHTML='';
   requestAnimationFrame(()=>{
-    if(song.lyrics&&song.lyrics.trim()){
-      // Her satırı div'e koy, boşlukları koru
+    if(song.richHtml&&song.richHtml.trim()){
+      // Format bilgisi varsa direkt yükle
+      ed.innerHTML=song.richHtml;
+    } else if(song.lyrics&&song.lyrics.trim()){
+      // Düz metin — satırlara böl, boşlukları koru
       ed.innerHTML=song.lyrics.split('\n').map(l=>{
-        // Boşlukları korumak için &nbsp; dönüşümü
-        const escaped=escHtml(l).replace(/ {2,}/g, m=>'&nbsp;'.repeat(m.length));
+        const escaped=escHtml(l).replace(/ {2,}/g,m=>'&nbsp;'.repeat(m.length));
         return`<div>${escaped||'<br>'}</div>`;
       }).join('');
     }
@@ -950,17 +957,15 @@ function saveFromEditor(){
   if(!t){showToast('Şarkı adı boş olamaz');return;}
   song.title=t;
   song.artist=document.getElementById('editorArtist').value.trim();
-  // Satırları koruyarak kaydet — innerText boşlukları düzgün alır
   const ed=document.getElementById('richEditor');
-  // Her div = bir satır
+  // richHtml: format bilgisini koru
+  song.richHtml=ed.innerHTML;
+  // lyrics: düz metin, transpoz ve akor tespiti için
   const lines=[];
   ed.querySelectorAll('div,p').forEach(el=>{
-    // &nbsp; → normal boşluk
     lines.push(el.innerText.replace(/\u00a0/g,' '));
   });
-  // Eğer div yoksa (tek satır) direkt innerText
   song.lyrics=lines.length>0?lines.join('\n'):ed.innerText.replace(/\u00a0/g,' ');
-  song.richHtml=null;
   saveData();showToast('Kaydedildi ✓');
   openSong(currentSongId,previousScreen==='playlistDetailScreen');
 }
