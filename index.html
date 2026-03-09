@@ -82,6 +82,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 /* SONG DETAIL */
 #songDetailScreen{background:var(--white)}
 .song-detail-topbar{background:var(--white);border-bottom:1.5px solid var(--cream-dark);padding:0 12px;height:52px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:100}
+@keyframes slideInRight{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideInLeft{from{transform:translateX(-60px);opacity:0}to{transform:translateX(0);opacity:1}}
+.slide-in-right{animation:slideInRight .2s ease}
+.slide-in-left{animation:slideInLeft .2s ease}
 .song-detail-header{padding:20px 20px 14px;border-bottom:1.5px solid var(--cream-dark)}
 .detail-song-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:4px}
 .detail-artist{font-size:13px;color:var(--terracotta);font-weight:500}
@@ -717,7 +721,55 @@ function openSong(id,fromPlaylist){
     updatePlNavBtns();
   }
   showScreen('songDetailScreen');
+  if(fromPlaylist) initSongSwipe();
 }
+
+// ─── Playlist swipe ───
+function initSongSwipe(){
+  const body=document.getElementById('songDetailBody');
+  let tx=0,ty=0,swiping=false;
+  // Önceki listener'ları temizle
+  const old=body._swipeClone;
+  if(old){body.removeEventListener('touchstart',old.ts);body.removeEventListener('touchmove',old.tm);body.removeEventListener('touchend',old.te);}
+
+  const onStart=e=>{
+    tx=e.touches[0].clientX;
+    ty=e.touches[0].clientY;
+    swiping=false;
+  };
+  const onMove=e=>{
+    const dx=e.touches[0].clientX-tx;
+    const dy=e.touches[0].clientY-ty;
+    if(!swiping&&Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>12){
+      swiping=true;
+    }
+    if(swiping) e.preventDefault(); // dikey kaydırmayı engelleme
+  };
+  const onEnd=e=>{
+    if(!swiping)return;
+    const dx=e.changedTouches[0].clientX-tx;
+    const pl=playlists.find(p=>p.id===currentPlaylistId);
+    if(!pl)return;
+    if(dx<-60&&currentPlaylistSongIdx<pl.songs.length-1){
+      // Sola kaydır → sonraki şarkı
+      document.getElementById('songDetailBody').classList.remove('slide-in-right','slide-in-left');
+      void document.getElementById('songDetailBody').offsetWidth;
+      document.getElementById('songDetailBody').classList.add('slide-in-right');
+      plNav(1);
+    } else if(dx>60&&currentPlaylistSongIdx>0){
+      // Sağa kaydır → önceki şarkı
+      document.getElementById('songDetailBody').classList.remove('slide-in-right','slide-in-left');
+      void document.getElementById('songDetailBody').offsetWidth;
+      document.getElementById('songDetailBody').classList.add('slide-in-left');
+      plNav(-1);
+    }
+  };
+  body.addEventListener('touchstart',onStart,{passive:true});
+  body.addEventListener('touchmove',onMove,{passive:false});
+  body.addEventListener('touchend',onEnd,{passive:true});
+  body._swipeClone={ts:onStart,tm:onMove,te:onEnd};
+}
+
 function renderPlain(text){
   if(!text)return'<span style="color:var(--ink-light);font-style:italic">Söz yok</span>';
   const cr=/^[\s]*([A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?[0-9]?(?:\/[A-G][#b]?)?[\s]*){1,}[\s]*$/;
