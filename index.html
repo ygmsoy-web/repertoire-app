@@ -601,6 +601,7 @@ function showScreen(id){
   document.getElementById('bottomNav').style.display=noNav.includes(id)?'none':'flex';
   document.getElementById('formatToolbar').classList.toggle('visible',id==='editorScreen');
   if(id!=='songDetailScreen'){quickJumpOpen=false;updateQJPanel();}
+  pushHistory(id);
 }
 function switchTab(tab){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1241,23 +1242,40 @@ function addManualSongAndEdit(){
 }
 
 // ═══ ANDROID GERİ TUŞU ═══
-function pushHistory(){
-  history.pushState({screen:'app'},'','');
+// ═══ ANDROID GERİ TUŞU — akıllı navigasyon ═══
+function pushHistory(screenId){
+  history.pushState({screen: screenId},'','');
 }
-window.addEventListener('popstate',()=>{
+
+window.addEventListener('popstate',(e)=>{
   const active=document.querySelector('.screen.active');
-  if(!active||active.id==='songsScreen'){
-    // En üstteyiz, normal çıkış
+  if(!active)return;
+  const current=active.id;
+
+  if(current==='songsScreen'||current==='playlistsScreen'){
+    // En üst seviye — normal çıkışa izin ver
     return;
   }
-  // Her durumda ana sayfaya dön
-  goHome();
-  // Yeni state ekle ki bir sonraki geri basış için hazır olsun
-  pushHistory();
+
+  // Geri tuşu basıldı — bir önceki mantıklı ekrana git
+  if(current==='editorScreen'){
+    closeEditor();
+  } else if(current==='songDetailScreen'){
+    goBack(); // previousScreen'e döner (playlist ya da songs)
+  } else if(current==='playlistDetailScreen'){
+    goToPlaylists();
+  } else if(current==='importScreen'){
+    showScreen('songsScreen');renderSongList();
+  } else {
+    goHome();
+  }
+
+  // Yeni state ekle ki bir sonraki geri için hazır olsun
+  pushHistory(document.querySelector('.screen.active')?.id||'songsScreen');
 });
 
 // ═══ INIT ═══
-loadData();renderSongList();pushHistory();
+loadData();renderSongList();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
