@@ -147,7 +147,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 
 /* PLAYLIST DETAIL */
 .playlist-song-item{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--cream-dark);gap:8px;background:var(--white)}
-.ps-num{width:26px;height:26px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--ink-mid);flex-shrink:0}
+.ps-num{width:26px;height:26px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--ink-mid);flex-shrink:0;transition:background .2s,color .2s}
+.ps-num.done{background:#2E7D4F;color:white}
+.pl-nav-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--cream);border-top:1.5px solid var(--cream-dark);position:sticky;bottom:0;z-index:10}
+.pl-nav-btn{display:flex;align-items:center;gap:5px;padding:8px 14px;border-radius:10px;border:1.5px solid var(--ink-faint);background:var(--white);font-size:13px;font-weight:500;color:var(--ink-mid);cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.pl-nav-btn:active{background:var(--cream-dark)}
+.pl-nav-btn:disabled{opacity:.3;pointer-events:none}
+.pl-nav-btn svg{width:16px;height:16px}
+.pl-done-btn{padding:8px 14px;border-radius:10px;border:1.5px solid #2E7D4F;background:white;font-size:13px;font-weight:500;color:#2E7D4F;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none}
+.pl-done-btn:active{background:#ABEBC6}
 .ps-info{flex:1;min-width:0;cursor:pointer}
 .ps-name{font-family:'Lora',serif;font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ps-artist{font-size:10px;color:var(--ink-light);margin-top:1px}
@@ -156,6 +164,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .ps-remove{width:30px;height:30px;border-radius:50%;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);-webkit-appearance:none}
 .ps-remove:active{color:var(--terracotta)}
 .ps-remove svg{width:16px;height:16px}
+.pl-done{background:#F0FBF4!important}
+.ps-num-done{background:#2E7D4F!important;color:white!important;font-size:10px!important}
 .drag-over{background:var(--terracotta-pale)!important;border-top:2px solid var(--terracotta)}
 
 /* IMPORT */
@@ -258,6 +268,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
   <div class="song-detail-topbar">
     <button class="icon-btn" onclick="goBack()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <!-- Playlist nav — only shown when opened from playlist -->
+    <button class="icon-btn" id="sdPrevBtn" onclick="plNav(-1)" style="display:none" title="Önceki şarkı">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/><polyline points="21 18 15 12 21 6"/></svg>
+    </button>
+    <button class="icon-btn" id="sdNextBtn" onclick="plNav(1)" style="display:none" title="Sonraki şarkı">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/><polyline points="3 18 9 12 3 6"/></svg>
     </button>
     <div style="flex:1"></div>
     <!-- Quick jump toggle -->
@@ -378,12 +395,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
       <button class="icon-btn" onclick="renameCurrentPlaylist()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </button>
+      <button class="icon-btn" title="Yeşilleri sıfırla" onclick="resetPlaylistDone()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </button>
+      <button class="icon-btn" title="Playlist sil" onclick="deleteCurrentPlaylist()" style="color:#C0392B">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </button>
       <button class="icon-btn" onclick="goToPlaylists()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
     </div>
   </div>
-  <div style="flex:1;overflow-y:auto;padding-bottom:20px;overscroll-behavior:contain"><div id="plDetailSongList"></div></div>
+  <div style="flex:1;overflow-y:auto;padding-bottom:80px;overscroll-behavior:contain"><div id="plDetailSongList"></div></div>
+  <div class="pl-nav-bar">
+    <button class="pl-nav-btn" id="plPrevBtn" onclick="plNav(-1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Önceki
+    </button>
+    <button class="pl-done-btn" onclick="markCurrentDone()">✓ Bitti</button>
+    <button class="pl-nav-btn" id="plNextBtn" onclick="plNav(1)">
+      Sonraki
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
 </div>
 
 <!-- ═══ IMPORT ═══ -->
@@ -671,6 +705,16 @@ function openSong(id,fromPlaylist){
   el.style.cssText='';
   quickJumpOpen=false;
   updateQJPanel();
+  // Playlist nav butonları
+  const pl=fromPlaylist?playlists.find(p=>p.id===currentPlaylistId):null;
+  const showNav=!!(fromPlaylist&&pl&&pl.songs.length>1);
+  document.getElementById('sdPrevBtn').style.display=showNav?'flex':'none';
+  document.getElementById('sdNextBtn').style.display=showNav?'flex':'none';
+  if(showNav){
+    document.getElementById('sdPrevBtn').disabled=currentPlaylistSongIdx<=0;
+    document.getElementById('sdNextBtn').disabled=currentPlaylistSongIdx>=pl.songs.length-1;
+    updatePlNavBtns();
+  }
   showScreen('songDetailScreen');
 }
 function renderPlain(text){
@@ -934,16 +978,19 @@ function renderPlaylists(){
 function openPlaylist(id){currentPlaylistId=id;renderPlaylistDetail(id);showScreen('playlistDetailScreen')}
 function renderPlaylistDetail(id){
   const pl=playlists.find(p=>p.id===id);if(!pl)return;
+  if(!pl.doneSongs)pl.doneSongs=[];
   document.getElementById('plDetailTitle').textContent=pl.name;
-  document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;
+  const done=pl.doneSongs.length;
+  document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı${done?' · '+done+' tamamlandı':''}`;
   const c=document.getElementById('plDetailSongList');
   if(!pl.songs.length){c.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><h3>Şarkı yok</h3><p>+ butonuna tıklayarak şarkı ekle</p></div>`;return;}
   c.innerHTML=pl.songs.map((sid,i)=>{
     const song=songs.find(s=>s.id===sid);if(!song)return'';
-    return`<div class="playlist-song-item" data-id="${song.id}" data-idx="${i}" draggable="true">
+    const isDone=pl.doneSongs.includes(sid);
+    return`<div class="playlist-song-item${isDone?' pl-done':''}" data-id="${song.id}" data-idx="${i}" draggable="true">
       <div class="ps-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="18" x2="16" y2="18"/></svg></div>
-      <div class="ps-num">${i+1}</div>
-      <div class="ps-info" onclick="openSong('${song.id}',true)">
+      <div class="ps-num${isDone?' ps-num-done':''}">${isDone?'✓':i+1}</div>
+      <div class="ps-info" onclick="openSongFromPlaylist('${song.id}',${i})">
         <div class="ps-name">${escHtml(song.title)}</div>
         ${song.artist?`<div class="ps-artist">${escHtml(song.artist)}</div>`:''}
       </div>
@@ -952,6 +999,8 @@ function renderPlaylistDetail(id){
       </button>
     </div>`;
   }).join('');
+  // Update nav buttons state
+  updatePlNavBtns();
   initDragSort(id);
 }
 
@@ -983,6 +1032,59 @@ function initDragSort(plId){
 
 function removeFromPlaylist(plId,songId){const pl=playlists.find(p=>p.id===plId);if(!pl)return;pl.songs=pl.songs.filter(s=>s!==songId);saveData();renderPlaylistDetail(plId);document.getElementById('plDetailSubtitle').textContent=`${pl.songs.length} şarkı`;showToast('Şarkı kaldırıldı')}
 function renameCurrentPlaylist(){const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;const n=prompt('Yeni playlist adı:',pl.name);if(n&&n.trim()){pl.name=n.trim();saveData();document.getElementById('plDetailTitle').textContent=pl.name;showToast('Yeniden adlandırıldı')}}
+
+function deleteCurrentPlaylist(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  if(!confirm(`"${pl.name}" silinsin mi?`))return;
+  playlists=playlists.filter(p=>p.id!==currentPlaylistId);
+  saveData();goToPlaylists();showToast('Playlist silindi');
+}
+
+// ─── Playlist içi navigasyon ───
+let currentPlaylistSongIdx=0; // playlist içindeki aktif şarkı indexi
+
+function openSongFromPlaylist(songId, idx){
+  currentPlaylistSongIdx=idx;
+  openSong(songId,true);
+  // Şarkı açılınca done olarak işaretle
+  const pl=playlists.find(p=>p.id===currentPlaylistId);
+  if(pl){
+    if(!pl.doneSongs)pl.doneSongs=[];
+    if(!pl.doneSongs.includes(songId))pl.doneSongs.push(songId);
+    saveData();
+  }
+}
+
+function updatePlNavBtns(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);
+  const prev=document.getElementById('plPrevBtn');
+  const next=document.getElementById('plNextBtn');
+  if(!prev||!next||!pl)return;
+  prev.disabled=currentPlaylistSongIdx<=0;
+  next.disabled=currentPlaylistSongIdx>=pl.songs.length-1;
+}
+
+function plNav(delta){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  const newIdx=currentPlaylistSongIdx+delta;
+  if(newIdx<0||newIdx>=pl.songs.length)return;
+  openSongFromPlaylist(pl.songs[newIdx],newIdx);
+}
+
+function markCurrentDone(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  const sid=pl.songs[currentPlaylistSongIdx];if(!sid)return;
+  if(!pl.doneSongs)pl.doneSongs=[];
+  if(!pl.doneSongs.includes(sid))pl.doneSongs.push(sid);
+  saveData();
+  // Sonraki şarkıya geç
+  plNav(1);
+}
+
+function resetPlaylistDone(){
+  const pl=playlists.find(p=>p.id===currentPlaylistId);if(!pl)return;
+  pl.doneSongs=[];saveData();renderPlaylistDetail(currentPlaylistId);showToast('Sıfırlandı');
+}
 
 // ═══ SONG PICKER ═══
 function renderPicker(mode){
