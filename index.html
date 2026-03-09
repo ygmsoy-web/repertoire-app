@@ -27,6 +27,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .topbar-left{display:flex;flex-direction:column;gap:1px}
 .topbar-right{display:flex;gap:1px;align-items:center}
 .icon-btn{width:36px;height:36px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--ink-mid);-webkit-appearance:none;flex-shrink:0}
+.back-btn{display:flex;align-items:center;gap:5px;border:none;background:none;cursor:pointer;color:var(--terracotta);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:6px 4px;-webkit-appearance:none;flex-shrink:0}
+.back-btn svg{width:20px;height:20px;flex-shrink:0}
 .icon-btn:active{background:var(--cream-dark)}
 .icon-btn svg{width:20px;height:20px}
 .icon-btn.active-view{background:var(--terracotta-pale);color:var(--terracotta)}
@@ -270,9 +272,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 <!-- ═══ SONG DETAIL ═══ -->
 <div id="songDetailScreen" class="screen">
   <div class="song-detail-topbar">
-    <button class="icon-btn" onclick="goBack()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
+    <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Geri</button>
     <!-- Playlist nav — only shown when opened from playlist -->
     <button class="icon-btn" id="sdPrevBtn" onclick="plNav(-1)" style="display:none" title="Önceki şarkı">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/><polyline points="21 18 15 12 21 6"/></svg>
@@ -333,18 +333,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 <!-- ═══ EDITOR ═══ -->
 <div id="editorScreen" class="screen">
   <div class="editor-topbar">
-    <button class="icon-btn" onclick="closeEditor()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
+<button class="back-btn" onclick="closeEditor()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Geri</button>
     <input type="text" class="editor-title-input" id="editorTitle" placeholder="Şarkı adı…">
     <button class="save-btn" onclick="saveFromEditor()">Kaydet</button>
   </div>
   <input type="text" class="editor-artist-input" id="editorArtist" placeholder="Sanatçı adı…">
   <!-- FORMAT TOOLBAR -->
   <div class="format-toolbar visible" id="formatToolbar">
-    <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('bold')"><b>B</b></button>
-    <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('italic')"><i style="font-family:serif">İ</i></button>
-    <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('underline')"><u>A</u></button>
+    <button class="fmt-btn" data-fmt="cmd" data-arg="bold" onmousedown="fmtMD(event)" onclick="fmtCmd('bold')"><b>B</b></button>
+    <button class="fmt-btn" data-fmt="cmd" data-arg="italic" onmousedown="fmtMD(event)" onclick="fmtCmd('italic')"><i style="font-family:serif">İ</i></button>
+    <button class="fmt-btn" data-fmt="cmd" data-arg="underline" onmousedown="fmtMD(event)" onclick="fmtCmd('underline')"><u>A</u></button>
     <div class="fmt-sep"></div>
     <select class="fmt-select" id="puntoSel" onchange="applyPunto(this.value)">
       <option value="">pt</option>
@@ -353,17 +351,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
       <option value="20">20</option><option value="24">24</option><option value="28">28</option>
     </select>
     <div class="fmt-sep"></div>
-    <button class="tc-sw" style="background:#C1440E" onmousedown="fmtMD(event)" onclick="applyColor('#C1440E','text')" title="Terracotta"></button>
+    <button class="tc-sw" style="background:#C1440E" data-fmt="color" data-arg="#C1440E" data-type="text" onmousedown="fmtMD(event)" onclick="applyColor('#C1440E','text')" title="Terracotta"></button>
     <div class="fmt-sep"></div>
     <div class="color-row">
-      <button class="tc-sw" style="background:#FFE066" onmousedown="fmtMD(event)" onclick="applyColor('#FFE066','hi')" title="Sarı vurgu"></button>
-      <button class="tc-sw" style="background:#ABEBC6" onmousedown="fmtMD(event)" onclick="applyColor('#ABEBC6','hi')" title="Yeşil vurgu"></button>
-      <button class="tc-sw" style="background:#AED6F1" onmousedown="fmtMD(event)" onclick="applyColor('#AED6F1','hi')" title="Mavi vurgu"></button>
-      <button class="tc-sw" style="background:#FADBD8" onmousedown="fmtMD(event)" onclick="applyColor('#FADBD8','hi')" title="Pembe vurgu"></button>
-      <button class="tc-sw" style="background:#eee;font-size:10px;display:flex;align-items:center;justify-content:center" onmousedown="fmtMD(event)" onclick="applyColor('transparent','hi')" title="Vurgu kaldır">✕</button>
+      <button class="tc-sw" style="background:#FFE066" data-fmt="color" data-arg="#FFE066" data-type="hi" onmousedown="fmtMD(event)" onclick="applyColor('#FFE066','hi')" title="Sarı vurgu"></button>
+      <button class="tc-sw" style="background:#ABEBC6" data-fmt="color" data-arg="#ABEBC6" data-type="hi" onmousedown="fmtMD(event)" onclick="applyColor('#ABEBC6','hi')" title="Yeşil vurgu"></button>
+      <button class="tc-sw" style="background:#AED6F1" data-fmt="color" data-arg="#AED6F1" data-type="hi" onmousedown="fmtMD(event)" onclick="applyColor('#AED6F1','hi')" title="Mavi vurgu"></button>
+      <button class="tc-sw" style="background:#FADBD8" data-fmt="color" data-arg="#FADBD8" data-type="hi" onmousedown="fmtMD(event)" onclick="applyColor('#FADBD8','hi')" title="Pembe vurgu"></button>
+      <button class="tc-sw" style="background:#eee;font-size:10px;display:flex;align-items:center;justify-content:center" data-fmt="color" data-arg="transparent" data-type="hi" onmousedown="fmtMD(event)" onclick="applyColor('transparent','hi')" title="Vurgu kaldır">✕</button>
     </div>
     <div class="fmt-sep"></div>
-    <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('removeFormat')" style="font-size:10px;color:var(--ink-light)">✕fmt</button>
+    <button class="fmt-btn" data-fmt="removeFormat" onmousedown="fmtMD(event)" onclick="fmtCmd('removeFormat')" style="font-size:10px;color:var(--ink-light)">✕fmt</button>
   </div>
   <div class="editor-body">
     <div id="richEditor" contenteditable="true" spellcheck="false"></div>
@@ -405,9 +403,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
       <button class="icon-btn" title="Playlist sil" onclick="deleteCurrentPlaylist()" style="color:#C0392B">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
       </button>
-      <button class="icon-btn" onclick="goToPlaylists()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+<button class="back-btn" onclick="goToPlaylists()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Geri</button>
     </div>
   </div>
   <div style="flex:1;overflow-y:auto;padding-bottom:80px;overscroll-behavior:contain"><div id="plDetailSongList"></div></div>
@@ -428,9 +424,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 <div id="importScreen" class="screen">
   <div class="topbar">
     <div class="topbar-left"><div class="topbar-title">Şarkı Ekle</div></div>
-    <button class="icon-btn" onclick="showScreen('songsScreen')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
+<button class="back-btn" onclick="showScreen('songsScreen');renderSongList()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Geri</button>
   </div>
   <div class="content-pad">
     <div class="import-section">
@@ -981,12 +975,36 @@ function restoreSelection(){
   const ed=document.getElementById('richEditor');ed.focus();
   if(savedRange){const sel=window.getSelection();sel.removeAllRanges();sel.addRange(savedRange);}
 }
-function fmtMD(e){e.preventDefault()} // prevent focus loss
+function fmtMD(e){
+  // Seçimi hemen kaydet, sonra focus kaybını engelle
+  saveSelection();
+  e.preventDefault();
+}
 document.getElementById('richEditor').addEventListener('mouseup',saveSelection);
 document.getElementById('richEditor').addEventListener('keyup',saveSelection);
 document.getElementById('richEditor').addEventListener('touchend',saveSelection);
-// Prevent toolbar from stealing focus on desktop
-document.getElementById('formatToolbar').addEventListener('mousedown',e=>{if(e.target.tagName!=='SELECT')e.preventDefault()});
+
+// Toolbar touchstart: seçimi kaydet + blur engelle
+document.getElementById('formatToolbar').addEventListener('touchstart',e=>{
+  if(e.target.tagName==='SELECT')return;
+  saveSelection();
+  e.preventDefault();
+},{passive:false});
+document.getElementById('formatToolbar').addEventListener('mousedown',e=>{
+  if(e.target.tagName!=='SELECT')e.preventDefault();
+});
+
+// Toolbar touchend: preventDefault yüzünden click tetiklenmez, touchend ile çalıştır
+document.getElementById('formatToolbar').addEventListener('touchend',e=>{
+  const btn=e.target.closest('[data-fmt]');
+  if(!btn)return;
+  e.preventDefault();
+  const fmt=btn.dataset.fmt;
+  const arg=btn.dataset.arg||null;
+  if(fmt==='cmd')fmtCmd(arg);
+  else if(fmt==='color')applyColor(arg,btn.dataset.type);
+  else if(fmt==='removeFormat')fmtCmd('removeFormat');
+},{passive:false});
 
 function fmtCmd(cmd){restoreSelection();document.execCommand(cmd,false,null);saveSelection()}
 
@@ -1292,50 +1310,15 @@ function addManualSongAndEdit(){
   currentSongId=id;previousScreen='songsScreen';openEditor();showToast(`"${title}" oluşturuldu`);
 }
 
-// ═══ ANDROID GERİ TUŞU ═══
-const STACK_SIZE=20;
-let navLock=false;
-
-function fillStack(){
-  for(let i=0;i<STACK_SIZE;i++) history.pushState({depth:i},'','');
-}
-
-function handleBack(){
-  if(navLock)return;
-  navLock=true;
-  setTimeout(()=>navLock=false,400);
-
-  const active=document.querySelector('.screen.active');
-  if(!active)return;
-  const current=active.id;
-
-  if(current==='songsScreen'||current==='playlistsScreen'){
-    // En üstteyiz — stack'i tekrar doldur
-    fillStack();
-    return;
-  }
-
-  if(current==='editorScreen'){
-    closeEditor();
-  } else if(current==='songDetailScreen'){
-    goBack();
-  } else if(current==='playlistDetailScreen'){
-    goToPlaylists();
-  } else if(current==='importScreen'){
-    showScreen('songsScreen');renderSongList();
-  } else {
-    goHome();
-  }
-
-  fillStack();
-}
-
+// ═══ ANDROID GERİ TUŞU — devre dışı, ekrandaki Geri butonu kullanılıyor ═══
 window.addEventListener('popstate',()=>{
-  handleBack();
+  // Stack'i dolu tut, uygulamadan çıkılmasın
+  history.pushState(null,'','');
 });
 
 // ═══ INIT ═══
-loadData();renderSongList();fillStack();
+loadData();renderSongList();
+history.pushState(null,'',''); // İlk state
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 </script>
