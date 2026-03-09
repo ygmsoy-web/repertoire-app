@@ -117,7 +117,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .editor-artist-input{width:100%;padding:7px 14px;border:none;border-bottom:1px solid var(--cream-dark);background:var(--cream);outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-mid)}
 .editor-artist-input::placeholder{color:var(--ink-faint)}
 .editor-body{flex:1;overflow-y:auto;padding:14px 18px 40px;overscroll-behavior:contain}
-#richEditor{min-height:200px;outline:none;font-family:'Lora',serif;font-size:16px;line-height:1.85;color:var(--ink);word-break:break-word}
+#richEditor{min-height:200px;outline:none;font-family:'Lora',serif;font-size:16px;line-height:1.85;color:var(--ink);word-break:break-word;padding-top:50px}
 #richEditor:empty:before{content:'Şarkı sözlerini buraya yaz…';color:var(--ink-faint);pointer-events:none}
 
 /* FORMAT TOOLBAR — fixed bottom */
@@ -275,7 +275,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
     <div class="qj-list" id="qjList"></div>
   </div>
 
-  <div id="songDetailBody" style="overflow-y:auto;flex:1;padding-bottom:20px;transition:margin-right .25s">
+  <div id="songDetailBody" style="overflow-y:auto;flex:1;padding-bottom:20px;transition:margin-right .25s;overscroll-behavior:contain">
     <div class="song-detail-header">
       <div class="detail-song-title" id="detailSongTitle"></div>
       <div class="detail-artist" id="detailSongArtist"></div>
