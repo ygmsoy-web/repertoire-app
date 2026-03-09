@@ -273,15 +273,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 <div id="songDetailScreen" class="screen">
   <div class="song-detail-topbar">
     <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Geri</button>
-    <!-- Playlist nav — only shown when opened from playlist -->
-    <button class="icon-btn" id="sdPrevBtn" onclick="plNav(-1)" style="display:none" title="Önceki şarkı">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/><polyline points="21 18 15 12 21 6"/></svg>
-    </button>
-    <button class="icon-btn" id="sdNextBtn" onclick="plNav(1)" style="display:none" title="Sonraki şarkı">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/><polyline points="3 18 9 12 3 6"/></svg>
-    </button>
     <div style="flex:1"></div>
-    <!-- Quick jump toggle -->
     <button class="icon-btn" id="qjToggleBtn" onclick="toggleQuickJump()" title="Hızlı geçiş">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
     </button>
@@ -386,7 +378,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 <!-- ═══ PLAYLIST DETAIL ═══ -->
 <div id="playlistDetailScreen" class="screen">
   <div class="topbar">
-    <div class="topbar-left">
+    <button class="back-btn" onclick="goToPlaylists()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Geri</button>
+    <div class="topbar-left" style="flex:1;min-width:0">
       <div class="topbar-title" id="plDetailTitle"></div>
       <div class="topbar-subtitle" id="plDetailSubtitle"></div>
     </div>
@@ -403,7 +396,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
       <button class="icon-btn" title="Playlist sil" onclick="deleteCurrentPlaylist()" style="color:#C0392B">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
       </button>
-<button class="back-btn" onclick="goToPlaylists()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Geri</button>
     </div>
   </div>
   <div style="flex:1;overflow-y:auto;padding-bottom:80px;overscroll-behavior:contain"><div id="plDetailSongList"></div></div>
@@ -708,16 +700,6 @@ function openSong(id,fromPlaylist){
   }
   quickJumpOpen=false;
   updateQJPanel();
-  // Playlist nav butonları
-  const pl=fromPlaylist?playlists.find(p=>p.id===currentPlaylistId):null;
-  const showNav=!!(fromPlaylist&&pl&&pl.songs.length>1);
-  document.getElementById('sdPrevBtn').style.display=showNav?'flex':'none';
-  document.getElementById('sdNextBtn').style.display=showNav?'flex':'none';
-  if(showNav){
-    document.getElementById('sdPrevBtn').disabled=currentPlaylistSongIdx<=0;
-    document.getElementById('sdNextBtn').disabled=currentPlaylistSongIdx>=pl.songs.length-1;
-    updatePlNavBtns();
-  }
   showScreen('songDetailScreen');
   if(fromPlaylist) initSongSwipe();
 }
