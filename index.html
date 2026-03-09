@@ -316,9 +316,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
   </div>
   <input type="text" class="editor-artist-input" id="editorArtist" placeholder="Sanatçı adı…">
   <!-- FORMAT TOOLBAR -->
-  <div style="padding:4px 10px;font-size:10px;color:var(--ink-light);background:var(--cream-dark);border-top:1px solid var(--ink-faint);display:none" id="editorHint">
-    💡 Akorları seçip <b>Am</b> butonuna bas → transpoz edilebilir hale gelir
-  </div>
   <div class="format-toolbar visible" id="formatToolbar">
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('bold')"><b>B</b></button>
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('italic')"><i style="font-family:serif">İ</i></button>
@@ -331,24 +328,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
       <option value="20">20</option><option value="24">24</option><option value="28">28</option>
     </select>
     <div class="fmt-sep"></div>
-    <div class="color-row">
-      <button class="tc-sw" style="background:#1A1410" onmousedown="fmtMD(event)" onclick="applyColor('#1A1410','text')"></button>
-      <button class="tc-sw" style="background:#C1440E" onmousedown="fmtMD(event)" onclick="applyColor('#C1440E','text')"></button>
-      <button class="tc-sw" style="background:#1A5276" onmousedown="fmtMD(event)" onclick="applyColor('#1A5276','text')"></button>
-      <button class="tc-sw" style="background:#2E7D4F" onmousedown="fmtMD(event)" onclick="applyColor('#2E7D4F','text')"></button>
-      <button class="tc-sw" style="background:#7D3C98" onmousedown="fmtMD(event)" onclick="applyColor('#7D3C98','text')"></button>
-      <button class="tc-sw" style="background:#C0392B" onmousedown="fmtMD(event)" onclick="applyColor('#C0392B','text')"></button>
-    </div>
+    <button class="tc-sw" style="background:#C1440E" onmousedown="fmtMD(event)" onclick="applyColor('#C1440E','text')" title="Terracotta"></button>
     <div class="fmt-sep"></div>
     <div class="color-row">
-      <button class="tc-sw" style="background:#FFE066" onmousedown="fmtMD(event)" onclick="applyColor('#FFE066','hi')"></button>
-      <button class="tc-sw" style="background:#ABEBC6" onmousedown="fmtMD(event)" onclick="applyColor('#ABEBC6','hi')"></button>
-      <button class="tc-sw" style="background:#AED6F1" onmousedown="fmtMD(event)" onclick="applyColor('#AED6F1','hi')"></button>
-      <button class="tc-sw" style="background:#FADBD8" onmousedown="fmtMD(event)" onclick="applyColor('#FADBD8','hi')"></button>
-      <button class="tc-sw" style="background:#eee;font-size:10px;display:flex;align-items:center;justify-content:center" onmousedown="fmtMD(event)" onclick="applyColor('transparent','hi')">✕</button>
+      <button class="tc-sw" style="background:#FFE066" onmousedown="fmtMD(event)" onclick="applyColor('#FFE066','hi')" title="Sarı vurgu"></button>
+      <button class="tc-sw" style="background:#ABEBC6" onmousedown="fmtMD(event)" onclick="applyColor('#ABEBC6','hi')" title="Yeşil vurgu"></button>
+      <button class="tc-sw" style="background:#AED6F1" onmousedown="fmtMD(event)" onclick="applyColor('#AED6F1','hi')" title="Mavi vurgu"></button>
+      <button class="tc-sw" style="background:#FADBD8" onmousedown="fmtMD(event)" onclick="applyColor('#FADBD8','hi')" title="Pembe vurgu"></button>
+      <button class="tc-sw" style="background:#eee;font-size:10px;display:flex;align-items:center;justify-content:center" onmousedown="fmtMD(event)" onclick="applyColor('transparent','hi')" title="Vurgu kaldır">✕</button>
     </div>
-    <div class="fmt-sep"></div>
-    <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="applyChordStyle()" style="color:var(--chord);font-weight:800;font-size:11px">Am</button>
     <div class="fmt-sep"></div>
     <button class="fmt-btn" onmousedown="fmtMD(event)" onclick="fmtCmd('removeFormat')" style="font-size:10px;color:var(--ink-light)">✕fmt</button>
   </div>
@@ -669,12 +657,8 @@ function openSong(id,fromPlaylist){
   resetTranspoz();
   document.getElementById('transpozBar').classList.toggle('visible', hc);
   const el=document.getElementById('detailLyrics');
-  if(song.richHtml&&song.richHtml.trim()){
-    el.innerHTML=song.richHtml;
-    el.style.cssText='font-family:Lora,serif;font-size:16px;line-height:1.85';
-  }else{
-    el.innerHTML=renderPlain(song.lyrics||'');el.style.cssText='';
-  }
+  el.innerHTML=renderPlain(song.lyrics||'');
+  el.style.cssText='';
   quickJumpOpen=false;
   updateQJPanel();
   showScreen('songDetailScreen');
@@ -711,17 +695,12 @@ function applyTranspoz(){
   const song=songs.find(s=>s.id===currentSongId);if(!song)return;
   const el=document.getElementById('detailLyrics');
   if(currentTranspoz===0){
-    if(song.richHtml&&song.richHtml.trim()){el.innerHTML=song.richHtml;el.style.cssText='font-family:Lora,serif;font-size:16px;line-height:1.85';}
-    else{el.innerHTML=renderPlain(song.lyrics||'');el.style.cssText='';}
+    el.innerHTML=renderPlain(song.lyrics||'');
+    el.style.cssText='';
     return;
   }
-  // Always transpose from original source, not from current (already-transposed) DOM
-  if(song.richHtml&&song.richHtml.trim()){
-    el.innerHTML=transposeHTML(song.richHtml,currentTranspoz);
-    el.style.cssText='font-family:Lora,serif;font-size:16px;line-height:1.85';
-  }else{
-    el.innerHTML=transposePlainText(song.lyrics||'',currentTranspoz);el.style.cssText='';
-  }
+  el.innerHTML=transposePlainText(song.lyrics||'',currentTranspoz);
+  el.style.cssText='';
 }
 
 function transposeRoot(root,semitones){
@@ -867,9 +846,11 @@ function saveFromEditor(){
   const song=songs.find(s=>s.id===currentSongId);if(!song)return;
   const t=document.getElementById('editorTitle').value.trim();
   if(!t){showToast('Şarkı adı boş olamaz');return;}
-  song.title=t;song.artist=document.getElementById('editorArtist').value.trim();
-  song.richHtml=document.getElementById('richEditor').innerHTML;
+  song.title=t;
+  song.artist=document.getElementById('editorArtist').value.trim();
+  // Save plain text — akor tespiti otomatik yapılır
   song.lyrics=document.getElementById('richEditor').innerText;
+  song.richHtml=null; // artık kullanılmıyor
   saveData();showToast('Kaydedildi ✓');
   openSong(currentSongId,previousScreen==='playlistDetailScreen');
 }
