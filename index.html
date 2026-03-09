@@ -605,7 +605,6 @@ function showScreen(id){
   document.getElementById('bottomNav').style.display=noNav.includes(id)?'none':'flex';
   document.getElementById('formatToolbar').classList.toggle('visible',id==='editorScreen');
   if(id!=='songDetailScreen'){quickJumpOpen=false;updateQJPanel();}
-  pushHistory(id);
 }
 function switchTab(tab){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1294,26 +1293,33 @@ function addManualSongAndEdit(){
 }
 
 // ═══ ANDROID GERİ TUŞU ═══
-// ═══ ANDROID GERİ TUŞU — akıllı navigasyon ═══
 function pushHistory(screenId){
-  history.pushState({screen: screenId},'','');
+  history.pushState({screen:screenId},'','');
+  history.pushState({screen:screenId+'_buf'},'','');
 }
 
 window.addEventListener('popstate',(e)=>{
+  // Tampon state geldi — bir adım daha geri git
+  if(e.state&&e.state.screen&&e.state.screen.endsWith('_buf')){
+    history.back();
+    return;
+  }
+
   const active=document.querySelector('.screen.active');
   if(!active)return;
   const current=active.id;
 
   if(current==='songsScreen'||current==='playlistsScreen'){
-    // En üst seviye — normal çıkışa izin ver
+    // En üstteyiz — stack'i yeniden doldur, çıkma
+    history.pushState({screen:current},'','');
+    history.pushState({screen:current+'_buf'},'','');
     return;
   }
 
-  // Geri tuşu basıldı — bir önceki mantıklı ekrana git
   if(current==='editorScreen'){
     closeEditor();
   } else if(current==='songDetailScreen'){
-    goBack(); // previousScreen'e döner (playlist ya da songs)
+    goBack();
   } else if(current==='playlistDetailScreen'){
     goToPlaylists();
   } else if(current==='importScreen'){
@@ -1322,13 +1328,18 @@ window.addEventListener('popstate',(e)=>{
     goHome();
   }
 
-  // Yeni state ekle ki bir sonraki geri için hazır olsun
-  pushHistory(document.querySelector('.screen.active')?.id||'songsScreen');
+  // Yeni ekran için stack'i doldur
+  const newScreen=document.querySelector('.screen.active');
+  if(newScreen){
+    history.pushState({screen:newScreen.id},'','');
+    history.pushState({screen:newScreen.id+'_buf'},'','');
+  }
 });
 
 // ═══ INIT ═══
-loadData();renderSongList();
+loadData();renderSongList();pushHistory('songsScreen');
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+
 </script>
 </body>
 </html>
