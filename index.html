@@ -133,7 +133,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
 .tc-sw:active{transform:scale(1.25)}
 
 /* PLAYLISTS */
-.content-pad{padding:14px;flex:1;overflow-y:auto;padding-bottom:72px}
+.content-pad{padding:14px;flex:1;overflow-y:auto;padding-bottom:72px;overscroll-behavior:contain}
 .playlist-card{background:var(--white);border:1.5px solid var(--cream-dark);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;-webkit-appearance:none;width:100%;text-align:left;border-left:4px solid var(--terracotta)}
 .playlist-card:active{opacity:.8}
 .playlist-icon{width:40px;height:40px;border-radius:10px;background:var(--terracotta-pale);display:flex;align-items:center;justify-content:center;color:var(--terracotta);flex-shrink:0}
@@ -383,7 +383,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);m
       </button>
     </div>
   </div>
-  <div style="flex:1;overflow-y:auto;padding-bottom:20px"><div id="plDetailSongList"></div></div>
+  <div style="flex:1;overflow-y:auto;padding-bottom:20px;overscroll-behavior:contain"><div id="plDetailSongList"></div></div>
 </div>
 
 <!-- ═══ IMPORT ═══ -->
@@ -566,7 +566,6 @@ function showScreen(id){
   const noNav=['songDetailScreen','importScreen','editorScreen'];
   document.getElementById('bottomNav').style.display=noNav.includes(id)?'none':'flex';
   document.getElementById('formatToolbar').classList.toggle('visible',id==='editorScreen');
-  document.getElementById('editorHint').style.display=id==='editorScreen'?'block':'none';
   if(id!=='songDetailScreen'){quickJumpOpen=false;updateQJPanel();}
 }
 function switchTab(tab){
