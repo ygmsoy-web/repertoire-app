@@ -1,4 +1,4 @@
-const CACHE = 'repertoire-v1';
+const CACHE = 'repertoire-v3';
 const ASSETS = [
   '/',
   '/index.html',
