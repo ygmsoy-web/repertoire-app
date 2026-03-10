@@ -676,9 +676,18 @@ function renderSongList(){
   }
 }
 function detectChords(t){
-  // Metinde en az bir gerçek akor satırı var mı?
-  const text=(t||'').replace(/<[^>]*>/g,'');
-  return text.split('\n').some(line=>isChordLine(line.trim()));
+  const text=(t||'');
+  // HTML'deki div/p/br'leri önce \n'e çevir, sonra tag'leri temizle
+  const plain=text
+    .replace(/<div[^>]*>/gi,'\n')
+    .replace(/<p[^>]*>/gi,'\n')
+    .replace(/<br\s*\/?>/gi,'\n')
+    .replace(/<[^>]*>/g,'')
+    .replace(/&nbsp;/g,' ')
+    .replace(/&amp;/g,'&')
+    .replace(/&lt;/g,'<')
+    .replace(/&gt;/g,'>');
+  return plain.split('\n').some(line=>isChordLine(line.trim()));
 }
 
 // ═══ SONG DETAIL ═══
