@@ -848,35 +848,15 @@ function applyTranspoz(){
     return;
   }
 
-  // Transpoz: lyrics satır satır işle, akor satırlarını transpoze et
+  // Transpoz aktifken: her zaman lyrics üzerinden çalış
+  // Format geçici kaybolur ama doğru transpoz gösterilir
   const lyrics=song.lyrics||'';
-  const transposed=lyrics.split('\n').map(line=>{
-    if(isChordLine(line)) return transposeChordLine(line,currentTranspoz);
+  const lines=lyrics.split('\n').map(line=>{
+    if(isChordLine(line.trim())) return transposeChordLine(line,currentTranspoz);
     return line;
-  }).join('\n');
-
-  if(hasRich){
-    // richHtml'deki akor satırlarını transpoze et, format korunsun
-    const tmp=document.createElement('div');
-    tmp.innerHTML=song.richHtml;
-    // Her div/p bir satır — içeriği kontrol et
-    tmp.querySelectorAll('div,p').forEach(div=>{
-      const lineText=div.innerText||div.textContent||'';
-      if(isChordLine(lineText.trim())){
-        // Sadece text node'larını değiştir, child elementleri boz
-        div.childNodes.forEach(node=>{
-          if(node.nodeType===3){// text node
-            node.textContent=transposeChordLine(node.textContent,currentTranspoz);
-          }
-        });
-      }
-    });
-    el.innerHTML=tmp.innerHTML;
-    el.style.cssText='font-family:\'Lora\',serif;font-size:16px;line-height:1.85;white-space:pre-wrap;word-break:break-word';
-  } else {
-    el.innerHTML=renderPlain(transposed);
-    el.style.cssText='white-space:pre-wrap;word-break:break-word';
-  }
+  });
+  el.innerHTML=lines.map(line=>`<div>${escHtml(line)||'&nbsp;'}</div>`).join('');
+  el.style.cssText='white-space:pre-wrap;word-break:break-word';
 }
 
 // ═══ QUICK JUMP (MASHUP) ═══
